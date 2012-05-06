@@ -24,7 +24,7 @@ About.prototype =
 
 		text = document.createElement("p");
 		text.style.textAlign = 'center';		
-		text.innerHTML = '<strong>HARMONY</strong>' + REV + '</a> by <a href="http://www.mattytemple.com" target="_blank">Matt Temple</a>';
+		text.innerHTML = '<strong>HARMONY </strong>' + 'by <a href="http://www.twitter.com/mrdoob" target="_blank">Mr.doob</a>';
 		containerText.appendChild(text);
 
 		text = document.createElement("p");
@@ -34,15 +34,23 @@ About.prototype =
 
 		text = document.createElement("p");
 		text.style.textAlign = 'center';
-		text.innerHTML = '<a href="http://github.com/mattytemple/harmony" target="_blank">Source Code</a>';
+		text.innerHTML = '<a href="http://mrdoob.com/blog/post/689" target="_blank">Info</a> - <a href="http://github.com/juniferd/harmonies" target="_blank">Source Code</a>';
 		containerText.appendChild(text);
 
 		text = document.createElement("hr");
 		containerText.appendChild(text);
 
 		text = document.createElement("p");
-		text.innerHTML = '<em>Sketchy</em>, <em>Shaded</em>, <em>Chrome</em>, <em>Fur</em>, <em>LongFur</em> and <em>Web</em> are all variations of the neighbour points connection concept. First implemented in <a href="http://www.zefrank.com/scribbler/" target="_blank">The Scribbler</a>.';
+		text.innerHTML = '<em>Sketchy</em>, <em>Shaded</em>, <em>Chrome</em>, <em>Fur</em>, <em>LongFur</em> and <em>Web</em> are all variations of the <a href="http://www.zefrank.com/scribbler/" target="_blank">neighbour points connection concept.</a>.';
 		containerText.appendChild(text);
+
+                text = document.createElement("hr");
+                containerText.appendChild(text);
+                text = document.createElement("p");
+                text.style.textAlign = 'center';		
+                text.innerHTML = 'Integrated with Node + Socket.IO for multiplayer support';
+
+                containerText.appendChild(text);
 	},
 	
 	show: function()
