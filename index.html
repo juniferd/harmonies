@@ -62,6 +62,7 @@
 		</style>
 	</head>
 	<body>
+        
 		<script type="text/javascript" src="js/brushes/circles.js"></script>
 		<script type="text/javascript" src="js/brushes/chrome.js"></script>
 		<script type="text/javascript" src="js/brushes/fur.js"></script>
@@ -79,5 +80,13 @@
 		<script type="text/javascript" src="js/menu.js"></script>
 		<script type="text/javascript" src="js/about.js"></script>	
 		<script type="text/javascript" src="js/main.js"></script>
-	</body>
+        <script type="text/javascript" src="https://raw.github.com/LearnBoost/socket.io-client/master/dist/socket.io.min.js"></script>
+        <script>
+          var socket = io.connect('http://nicesho.es');
+          socket.on('init', function (data) {
+            console.log(data);
+            socket.emit('my other event', { my: 'data' });
+          });
+        </script>
+    </body>
 </html>
