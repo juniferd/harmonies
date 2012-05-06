@@ -236,7 +236,6 @@ function onWindowKeyUp( event )
 			break;
 
 		case 82: // r
-			brush.destroy();
 			changeBrush(menu.selector.selectedIndex);
 			break;
 		case 66: // b
@@ -299,8 +298,12 @@ function onDocumentDrop( event )
 }
 // BRUSH SELECTORS
 function changeBrush(i) {
+    if (brush){
+        brush.destroy();
+    }
     brush = eval("new " + BRUSHES[i] + "(context)");
     brushName = BRUSHES[i];
+    socket.emit('new-brush', {brush: brushName});
 }
 
 // COLOR SELECTORS
@@ -365,7 +368,7 @@ function onMenuSelectorChange()
 	if (BRUSHES[menu.selector.selectedIndex] == "")
 		return;
 
-	brush.destroy();
+
 	changeBrush(menu.selector.selectedIndex);
 
 	window.location.hash = BRUSHES[menu.selector.selectedIndex];
@@ -395,7 +398,6 @@ function onMenuClear()
 
 	saveToLocalStorage();
 
-	brush.destroy();
 	changeBrush(menu.selector.selectedIndex);
 }
 
