@@ -77,10 +77,12 @@
             console.log(data);
             var origColor = COLOR;
             var newBrush = userBrushes[data.user_id];
+            if (COLOR){
+              COLOR = data.color;  
+            }
             newBrush.strokeStart(data.coords.shift());
-            COLOR = data.color;
             for (var i = 0; i< data.coords.length; i++){
-              newBrush.stroke(data.coords[i].positionX, data.coords[i].positionY);  
+              newBrush.stroke(data.coords[i].x, data.coords[i].y);  
             }
             COLOR = origColor;
             newBrush.strokeEnd();

@@ -435,7 +435,7 @@ function onCanvasMouseDown( event )
 	
 	brush.strokeStart( event.clientX, event.clientY );
     
-    strokeCoordinates = [{positionX : event.clientX, positionY : event.clientY}];
+    strokeCoordinates = [{x : event.clientX, y : event.clientY}];
     
 	window.addEventListener('mousemove', onCanvasMouseMove, false);
 	window.addEventListener('mouseup', onCanvasMouseUp, false);
@@ -446,7 +446,7 @@ function onCanvasMouseMove( event )
 	BRUSH_PRESSURE = wacom && wacom.isWacom ? wacom.pressure : 1;
 	
 	brush.stroke( event.clientX, event.clientY );
-    strokeCoordinates.push({positionX : event.clientX, positionY : event.clientY});
+    strokeCoordinates.push({x : event.clientX, y : event.clientY});
 }
 
 function onCanvasMouseUp()
@@ -480,7 +480,7 @@ function onCanvasTouchStart( event )
 		event.preventDefault();
 		
 		brush.strokeStart( event.touches[0].pageX, event.touches[0].pageY );
-		strokeCoordinates = [{positionX : event.touches[0].pageX, positionY : event.touches[0].pageY}];
+		strokeCoordinates = [{x : event.touches[0].pageX, y : event.touches[0].pageY}];
 		window.addEventListener('touchmove', onCanvasTouchMove, false);
 		window.addEventListener('touchend', onCanvasTouchEnd, false);
 	}
@@ -492,7 +492,7 @@ function onCanvasTouchMove( event )
 	{
 		event.preventDefault();
 		brush.stroke( event.touches[0].pageX, event.touches[0].pageY );
-        strokeCoordinates.push({positionX : event.touches[0].pageX, positionY : event.touches[0].pageY});
+        strokeCoordinates.push({x : event.touches[0].pageX, y : event.touches[0].pageY});
 	}
 }
 
