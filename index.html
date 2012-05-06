@@ -64,7 +64,7 @@
 	<body>
         <script type="text/javascript" src="https://raw.github.com/LearnBoost/socket.io-client/master/dist/socket.io.min.js"></script>
         <script>
-          var socket = io.connect('http://nicesho.es');
+          var socket = io.connect('http://nicesho.es:8888');
           var userBrushes = {};
           socket.on('new-brush', function (data) {
             if (userBrushes[data.user_id]){
