@@ -75,13 +75,15 @@
           });
           socket.on('stroke', function(data){
             console.log(data);
+            var origColor = COLOR;
             var newBrush = userBrushes[data.user_id];
             newBrush.strokeStart(data.coords.shift());
+            COLOR = data.color;
             for (var i = 0; i< data.coords.length; i++){
               newBrush.stroke(data.coords[i].positionX, data.coords[i].positionY);  
             }
+            COLOR = origColor;
             newBrush.strokeEnd();
-            newBrush.destroy();
           });
         </script>
 		<script type="text/javascript" src="js/brushes/circles.js"></script>

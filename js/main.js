@@ -453,7 +453,7 @@ function onCanvasMouseUp()
 {
 	brush.strokeEnd();
     if (strokeCoordinates && strokeCoordinates.length >= 1){
-        socket.emit('stroke', { brush: brushName, coords: strokeCoordinates});    
+        socket.emit('stroke', { brush: brushName, coords: strokeCoordinates, color: COLOR});    
         //console.log("Sending", {brush: brushName, coords: strokeCoordinates});
     }
     
@@ -504,7 +504,7 @@ function onCanvasTouchEnd( event )
 		
 		brush.strokeEnd();
         if (strokeCoordinates && strokeCoordinates.length >= 1){
-            socket.emit('stroke', { brush: brushName, coords: strokeCoordinates});    
+            socket.emit('stroke', { brush: brushName, coords: strokeCoordinates, color: COLOR});    
         }
 		window.removeEventListener('touchmove', onCanvasTouchMove, false);
 		window.removeEventListener('touchend', onCanvasTouchEnd, false);
