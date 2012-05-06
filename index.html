@@ -62,6 +62,24 @@
 		</style>
 	</head>
 	<body>
+        <script type="text/javascript" src="https://raw.github.com/LearnBoost/socket.io-client/master/dist/socket.io.min.js"></script>
+        <script>
+          var socket = io.connect('http://nicesho.es');
+          socket.on('init', function (data) {
+            //console.log(data);
+            //socket.emit('my other event', { my: 'data' });
+          });
+          socket.on('stroke', function(data){
+            console.log(data);
+            var newBrush = eval("new " + data.brush + "(context)");
+            newBrush.strokeStart(data.coords.shift());
+            for (var i = 0; i< data.coords.length; i++){
+              newBrush.stroke(data.coords[i].positionX, data.coords[i].positionY);  
+            }
+            newBrush.strokeEnd();
+            newBrush.destroy();
+          });
+        </script>
 		<script type="text/javascript" src="js/brushes/circles.js"></script>
 		<script type="text/javascript" src="js/brushes/chrome.js"></script>
 		<script type="text/javascript" src="js/brushes/fur.js"></script>
@@ -79,5 +97,6 @@
 		<script type="text/javascript" src="js/menu.js"></script>
 		<script type="text/javascript" src="js/about.js"></script>	
 		<script type="text/javascript" src="js/main.js"></script>
-	</body>
+        
+    </body>
 </html>

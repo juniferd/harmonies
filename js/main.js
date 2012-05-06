@@ -10,6 +10,7 @@ var SCREEN_WIDTH = window.innerWidth,
     BACKGROUND_COLOR = [250, 250, 250],
     STORAGE = window.localStorage,
     brush,
+    strokeCoordinates = [],
     saveTimeOut,
     wacom,
     i,
@@ -139,7 +140,7 @@ function init()
 		{
 			if (hash == BRUSHES[i])
 			{
-				brush = eval("new " + BRUSHES[i] + "(context)");
+				changeBrush(i);
 				menu.selector.selectedIndex = i;
 				break;
 			}
@@ -148,7 +149,7 @@ function init()
 
 	if (!brush)
 	{
-		brush = eval("new " + BRUSHES[0] + "(context)");
+		changeBrush(0);
 	}
 	
 	about = new About();
@@ -236,7 +237,7 @@ function onWindowKeyUp( event )
 
 		case 82: // r
 			brush.destroy();
-			brush = eval("new " + BRUSHES[menu.selector.selectedIndex] + "(context)");
+			changeBrush(menu.selector.selectedIndex);
 			break;
 		case 66: // b
 			document.body.style.backgroundImage = null;
@@ -296,7 +297,11 @@ function onDocumentDrop( event )
 		document.body.style.backgroundImage = 'url(' + fileString[0] + ')';
 	}	
 }
-
+// BRUSH SELECTORS
+function changeBrush(i) {
+    brush = eval("new " + BRUSHES[i] + "(context)");
+    brushName = BRUSHES[i];
+}
 
 // COLOR SELECTORS
 
@@ -361,7 +366,7 @@ function onMenuSelectorChange()
 		return;
 
 	brush.destroy();
-	brush = eval("new " + BRUSHES[menu.selector.selectedIndex] + "(context)");
+	changeBrush(menu.selector.selectedIndex);
 
 	window.location.hash = BRUSHES[menu.selector.selectedIndex];
 }
@@ -385,15 +390,13 @@ function onMenuSave()
 
 function onMenuClear()
 {
-	if (!confirm("Are you sure?"))
-		return;
 		
 	context.clearRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	saveToLocalStorage();
 
 	brush.destroy();
-	brush = eval("new " + BRUSHES[menu.selector.selectedIndex] + "(context)");
+	changeBrush(menu.selector.selectedIndex);
 }
 
 function onMenuAbout()
@@ -429,7 +432,9 @@ function onCanvasMouseDown( event )
 	BRUSH_PRESSURE = wacom && wacom.isWacom ? wacom.pressure : 1;
 	
 	brush.strokeStart( event.clientX, event.clientY );
-
+    
+    strokeCoordinates = [{positionX : event.clientX, positionY : event.clientY}];
+    
 	window.addEventListener('mousemove', onCanvasMouseMove, false);
 	window.addEventListener('mouseup', onCanvasMouseUp, false);
 }
@@ -439,12 +444,18 @@ function onCanvasMouseMove( event )
 	BRUSH_PRESSURE = wacom && wacom.isWacom ? wacom.pressure : 1;
 	
 	brush.stroke( event.clientX, event.clientY );
+    strokeCoordinates.push({positionX : event.clientX, positionY : event.clientY});
 }
 
 function onCanvasMouseUp()
 {
 	brush.strokeEnd();
-	
+    if (strokeCoordinates && strokeCoordinates.length >= 1){
+        socket.emit('stroke', { brush: brushName, coords: strokeCoordinates});    
+        console.log("Sending", {brush: brushName, coords: strokeCoordinates});
+    }
+    
+    strokeCoordinates = null;
 	window.removeEventListener('mousemove', onCanvasMouseMove, false);
 	window.removeEventListener('mouseup', onCanvasMouseUp, false);
 	
@@ -478,7 +489,8 @@ function onCanvasTouchMove( event )
 	if(event.touches.length == 1)
 	{
 		event.preventDefault();
-		brush.stroke( event.touches[0].pageX, event.touches[0].pageY );
+		
+        socket.emit('brush-stroke', {brush: brushName, positionX: event.touches[0].pageX, positionY: event.touches[0].pageY});
 	}
 }
 
@@ -489,7 +501,7 @@ function onCanvasTouchEnd( event )
 		event.preventDefault();
 		
 		brush.strokeEnd();
-
+        
 		window.removeEventListener('touchmove', onCanvasTouchMove, false);
 		window.removeEventListener('touchend', onCanvasTouchEnd, false);
 	}
