@@ -454,7 +454,7 @@ function onCanvasMouseUp()
 	brush.strokeEnd();
     if (strokeCoordinates && strokeCoordinates.length >= 1){
         socket.emit('stroke', { brush: brushName, coords: strokeCoordinates});    
-        console.log("Sending", {brush: brushName, coords: strokeCoordinates});
+        //console.log("Sending", {brush: brushName, coords: strokeCoordinates});
     }
     
     strokeCoordinates = null;
@@ -480,7 +480,7 @@ function onCanvasTouchStart( event )
 		event.preventDefault();
 		
 		brush.strokeStart( event.touches[0].pageX, event.touches[0].pageY );
-		
+		strokeCoordinates = [{positionX : event.touches[0].pageX, positionY : event.touches[0].pageY}];
 		window.addEventListener('touchmove', onCanvasTouchMove, false);
 		window.addEventListener('touchend', onCanvasTouchEnd, false);
 	}
@@ -491,8 +491,8 @@ function onCanvasTouchMove( event )
 	if(event.touches.length == 1)
 	{
 		event.preventDefault();
-		
-        socket.emit('brush-stroke', {brush: brushName, positionX: event.touches[0].pageX, positionY: event.touches[0].pageY});
+		brush.stroke( event.touches[0].pageX, event.touches[0].pageY );
+        strokeCoordinates.push({positionX : event.touches[0].pageX, positionY : event.touches[0].pageY});
 	}
 }
 
@@ -503,7 +503,9 @@ function onCanvasTouchEnd( event )
 		event.preventDefault();
 		
 		brush.strokeEnd();
-        
+        if (strokeCoordinates && strokeCoordinates.length >= 1){
+            socket.emit('stroke', { brush: brushName, coords: strokeCoordinates});    
+        }
 		window.removeEventListener('touchmove', onCanvasTouchMove, false);
 		window.removeEventListener('touchend', onCanvasTouchEnd, false);
 	}
