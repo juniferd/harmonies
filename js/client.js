@@ -4,6 +4,7 @@ var socket = io.connect('http://nicesho.es:8888');
 socket.emit('join', { room: room });
 
 var userBrushes = {};
+var defaultBrush;
 socket.on('new-brush', function (data) {
   if (userBrushes[data.user_id]){
     userBrushes[data.user_id].destroy();
@@ -13,7 +14,12 @@ socket.on('new-brush', function (data) {
 });
 socket.on('stroke', function(data){
   var origColor = COLOR;
-  var newBrush = userBrushes[data.user_id];
+
+  if (!defaultBrush) {
+     defaultBrush = new sketchy(context);
+  }
+
+  var newBrush = userBrushes[data.user_id] || defaultBrush;
   COLOR = data.color || COLOR
   newBrush.strokeStart(data.coords.shift());
 

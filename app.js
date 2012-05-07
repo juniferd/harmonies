@@ -16,10 +16,11 @@ function getID() {
 };
 
 var _brushes = {};
+var _strokes = { "#default" : []};
 
 io.sockets.on('connection', function (socket) {
   var _user_id = getID();
-  var _room = "";
+  var _room = "#default";
 
   for (var i in _brushes) {
     socket.emit('new-brush', _brushes[i]);
@@ -29,16 +30,26 @@ io.sockets.on('connection', function (socket) {
     if (data && data.coords && data.coords.length >= 1) {
       data.user_id = _user_id;
       socket.broadcast.to(_room).emit('stroke', data);
+      _strokes[_room].push(data);
     }
   });
 
   socket.on('join', function(data) {
     _room = data.room || "#default";
+    if (!_strokes[_room]) {
+      _strokes[_room] = [];
+    }
     socket.join(_room);
+    socket.emit('clear');
+
+    for (var i in _strokes[_room]) {
+      socket.emit('stroke', _strokes[_room][i]);
+    }
   });
 
   socket.on('clear', function() {
     socket.broadcast.to(_room).emit('clear');
+    _strokes[_room] = [];
   });
 
   socket.on('new-brush', function (data) {
