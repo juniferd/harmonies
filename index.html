@@ -12,20 +12,20 @@
 				font-family: Monospace;
 				font-size: 12px;
 			}
-			
+
 			body
 			{
 				margin: 0px;
 				overflow: hidden;
 			}
-			
+
 			select
 			{
 				text-transform: uppercase;
 				font-size: 11px;
 				text-align: center;
 			}
-			
+
 			hr
 			{
 				border: 0;
@@ -33,7 +33,7 @@
 				background-color: #ccc;
 				margin: 20px 0px;
 			}
-			
+
 			.gui
 			{
 				color: #ccc;
@@ -46,13 +46,13 @@
 				line-height: 18px;
 				cursor: default;
 			}
-			
+
 			.button
 			{
 				padding: 2px;
 				cursor: pointer;
 			}
-			
+
 			.key
 			{
 				padding: 0px 8px;
@@ -74,16 +74,30 @@
             userBrushes[data.user_id] = newBrush;
           });
           socket.on('stroke', function(data){
-            console.log(data);
             var origColor = COLOR;
             var newBrush = userBrushes[data.user_id];
             if (COLOR){
-              COLOR = data.color;  
+              COLOR = data.color;
             }
+
             newBrush.strokeStart(data.coords.shift());
-            for (var i = 0; i< data.coords.length; i++){
-              newBrush.stroke(data.coords[i].x, data.coords[i].y);  
-            }
+            COLOR = origColor;
+
+            var i = 0,
+                queue_size = 20;
+            var doWork = function() {
+              COLOR = data.color;
+              for (var n = 0; i < data.coords.length && n < queue_size; i++, n++){
+                newBrush.stroke(data.coords[i].x, data.coords[i].y);
+              }
+              COLOR = origColor;
+              if (i < data.coords.length) {
+                setTimeout(doWork);
+              }
+
+            };
+
+            doWork();
             COLOR = origColor;
             newBrush.strokeEnd();
           });
@@ -103,8 +117,8 @@
 		<script type="text/javascript" src="js/colorselector.js"></script>
 		<script type="text/javascript" src="js/palette.js"></script>
 		<script type="text/javascript" src="js/menu.js"></script>
-		<script type="text/javascript" src="js/about.js"></script>	
+		<script type="text/javascript" src="js/about.js"></script>
 		<script type="text/javascript" src="js/main.js"></script>
-        
+
     </body>
 </html>
