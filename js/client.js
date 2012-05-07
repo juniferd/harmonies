@@ -29,7 +29,7 @@ socket.on('stroke', function(data){
   var doWork = function() {
     COLOR = data.color || COLOR;
     for (var n = 0; i < data.coords.length && n < queue_size; i++, n++){
-      newBrush.stroke(data.coords[i].x, data.coords[i].y);
+      newBrush.stroke(data.coords[i][0], data.coords[i][1]);
     }
 
     if (i < data.coords.length) {
