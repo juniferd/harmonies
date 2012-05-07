@@ -18,25 +18,42 @@ function getID() {
 var _brushes = {};
 
 io.sockets.on('connection', function (socket) {
-  var user_id = getID();
-  socket.on('stroke', function (data) {
-    if (data && data.coords && data.coords.length >= 1) {
-      data.user_id = user_id;
-      socket.broadcast.emit('stroke', data);
-    }
-  });
-
-  socket.on('new-brush', function (data) {
-    if (data) {
-      data.user_id = user_id;
-      _brushes[user_id] = data;
-      socket.broadcast.emit('new-brush', data);
-    }
-  });
+  var _user_id = getID();
+  var _room = "";
 
   for (var i in _brushes) {
     socket.emit('new-brush', _brushes[i]);
   };
 
-  socket.broadcast.emit('new-brush', { user_id: user_id, brush: 'sketchy' });
+  socket.on('stroke', function (data) {
+    if (data && data.coords && data.coords.length >= 1) {
+      data.user_id = _user_id;
+      socket.broadcast.to(_room).emit('stroke', data);
+    }
+  });
+
+  socket.on('join', function(data) {
+    _room = data.room || "#default";
+    socket.join(_room);
+  });
+
+  socket.on('clear', function() {
+    socket.broadcast.to(_room).emit('clear');
+  });
+
+  socket.on('new-brush', function (data) {
+    if (data) {
+      data.user_id = _user_id;
+      _brushes[_user_id] = data;
+      socket.broadcast.emit('new-brush', data);
+    }
+  });
+
+  socket.on('disconnect', function() {
+    if (_brushes[_user_id]) {
+      delete _brushes[_user_id];
+    }
+  });
+
+  socket.broadcast.to(_room).emit('new-brush', { user_id: _user_id, brush: 'sketchy' });
 });

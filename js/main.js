@@ -36,23 +36,23 @@ init();
 function init()
 {
 	var hash, palette, embed, localStorageImage;
-	
+
 	if (USER_AGENT.search("android") > -1 || USER_AGENT.search("iphone") > -1)
-		BRUSH_SIZE = 2;	
-		
+		BRUSH_SIZE = 2;
+
 	if (USER_AGENT.search("safari") > -1 && USER_AGENT.search("chrome") == -1) // Safari
 		STORAGE = false;
-	
+
 	document.body.style.backgroundRepeat = 'no-repeat';
-	document.body.style.backgroundPosition = 'center center';	
-	
+	document.body.style.backgroundPosition = 'center center';
+
 	container = document.createElement('div');
 	document.body.appendChild(container);
 
 	/*
 	 * TODO: In some browsers a naste "Plugin Missing" window appears and people is getting confused.
 	 * Disabling it until a better way to handle it appears.
-	 * 
+	 *
 	 * embed = document.createElement('embed');
 	 * embed.id = 'wacom-plugin';
 	 * embed.type = 'application/x-wacom-tablet';
@@ -66,23 +66,23 @@ function init()
 	canvas.height = SCREEN_HEIGHT;
 	canvas.style.cursor = 'crosshair';
 	container.appendChild(canvas);
-	
+
 	context = canvas.getContext("2d");
-	
+
 	flattenCanvas = document.createElement("canvas");
 	flattenCanvas.width = SCREEN_WIDTH;
 	flattenCanvas.height = SCREEN_HEIGHT;
-	
+
 	palette = new Palette();
-	
+
 	foregroundColorSelector = new ColorSelector(palette);
 	foregroundColorSelector.addEventListener('change', onForegroundColorSelectorChange, false);
 	container.appendChild(foregroundColorSelector.container);
 
 	backgroundColorSelector = new ColorSelector(palette);
 	backgroundColorSelector.addEventListener('change', onBackgroundColorSelectorChange, false);
-	container.appendChild(backgroundColorSelector.container);	
-	
+	container.appendChild(backgroundColorSelector.container);
+
 	menu = new Menu();
 	menu.foregroundColor.addEventListener('click', onMenuForegroundColor, false);
 	menu.foregroundColor.addEventListener('touchend', onMenuForegroundColor, false);
@@ -104,16 +104,16 @@ function init()
 		if (localStorage.canvas)
 		{
 			localStorageImage = new Image();
-		
+
 			localStorageImage.addEventListener("load", function(event)
 			{
 				localStorageImage.removeEventListener(event.type, arguments.callee, false);
 				context.drawImage(localStorageImage,0,0);
 			}, false);
-			
-			localStorageImage.src = localStorage.canvas;			
+
+			localStorageImage.src = localStorage.canvas;
 		}
-		
+
 		if (localStorage.brush_color_red)
 		{
 			COLOR[0] = localStorage.brush_color_red;
@@ -131,46 +131,31 @@ function init()
 
 	foregroundColorSelector.setColor( COLOR );
 	backgroundColorSelector.setColor( BACKGROUND_COLOR );
-	
-	if (window.location.hash)
-	{
-		hash = window.location.hash.substr(1,window.location.hash.length);
-
-		for (i = 0; i < BRUSHES.length; i++)
-		{
-			if (hash == BRUSHES[i])
-			{
-				changeBrush(i);
-				menu.selector.selectedIndex = i;
-				break;
-			}
-		}
-	}
 
 	if (!brush)
 	{
 		changeBrush(0);
 	}
-	
+
 	about = new About();
 	container.appendChild(about.container);
-	
+
 	window.addEventListener('mousemove', onWindowMouseMove, false);
 	window.addEventListener('resize', onWindowResize, false);
 	window.addEventListener('keydown', onWindowKeyDown, false);
 	window.addEventListener('keyup', onWindowKeyUp, false);
 	window.addEventListener('blur', onWindowBlur, false);
-	
+
 	document.addEventListener('mousedown', onDocumentMouseDown, false);
 	document.addEventListener('mouseout', onDocumentMouseOut, false);
-	
-	document.addEventListener("dragenter", onDocumentDragEnter, false);  
+
+	document.addEventListener("dragenter", onDocumentDragEnter, false);
 	document.addEventListener("dragover", onDocumentDragOver, false);
-	document.addEventListener("drop", onDocumentDrop, false);  
-	
+	document.addEventListener("drop", onDocumentDrop, false);
+
 	canvas.addEventListener('mousedown', onCanvasMouseDown, false);
 	canvas.addEventListener('touchstart', onCanvasTouchStart, false);
-	
+
 	onWindowResize(null);
 }
 
@@ -187,9 +172,9 @@ function onWindowResize()
 {
 	SCREEN_WIDTH = window.innerWidth;
 	SCREEN_HEIGHT = window.innerHeight;
-	
+
 	menu.container.style.left = ((SCREEN_WIDTH - menu.container.offsetWidth) / 2) + 'px';
-	
+
 	about.container.style.left = ((SCREEN_WIDTH - about.container.offsetWidth) / 2) + 'px';
 	about.container.style.top = ((SCREEN_HEIGHT - about.container.offsetHeight) / 2) + 'px';
 }
@@ -198,7 +183,7 @@ function onWindowKeyDown( event )
 {
 	if (shiftKeyIsDown)
 		return;
-		
+
 	switch(event.keyCode)
 	{
 		case 16: // Shift
@@ -207,18 +192,18 @@ function onWindowKeyDown( event )
 			foregroundColorSelector.container.style.top = mouseY - 125 + 'px';
 			foregroundColorSelector.container.style.visibility = 'visible';
 			break;
-			
+
 		case 18: // Alt
 			altKeyIsDown = true;
 			break;
-			
+
 		case 68: // d
 			if(BRUSH_SIZE > 1) BRUSH_SIZE --;
 			break;
-		
+
 		case 70: // f
 			BRUSH_SIZE ++;
-			break;			
+			break;
 	}
 }
 
@@ -228,9 +213,9 @@ function onWindowKeyUp( event )
 	{
 		case 16: // Shift
 			shiftKeyIsDown = false;
-			foregroundColorSelector.container.style.visibility = 'hidden';			
+			foregroundColorSelector.container.style.visibility = 'hidden';
 			break;
-			
+
 		case 18: // Alt
 			altKeyIsDown = false;
 			break;
@@ -242,8 +227,8 @@ function onWindowKeyUp( event )
 			document.body.style.backgroundImage = null;
 			break;
 	}
-	
-	context.lineCap = BRUSH_SIZE == 1 ? 'butt' : 'round';	
+
+	context.lineCap = BRUSH_SIZE == 1 ? 'butt' : 'round';
 }
 
 function onWindowBlur( event )
@@ -280,11 +265,11 @@ function onDocumentDragOver( event )
 
 function onDocumentDrop( event )
 {
-	event.stopPropagation();  
+	event.stopPropagation();
 	event.preventDefault();
-	
+
 	var file = event.dataTransfer.files[0];
-	
+
 	if (file.type.match(/image.*/))
 	{
 		/*
@@ -294,7 +279,7 @@ function onDocumentDrop( event )
 
 		var fileString = event.dataTransfer.getData('text').split("\n");
 		document.body.style.backgroundImage = 'url(' + fileString[0] + ')';
-	}	
+	}
 }
 // BRUSH SELECTORS
 function changeBrush(i) {
@@ -311,30 +296,30 @@ function changeBrush(i) {
 function onForegroundColorSelectorChange( event )
 {
 	COLOR = foregroundColorSelector.getColor();
-	
+
 	menu.setForegroundColor( COLOR );
 
 	if (STORAGE)
 	{
 		localStorage.brush_color_red = COLOR[0];
 		localStorage.brush_color_green = COLOR[1];
-		localStorage.brush_color_blue = COLOR[2];		
+		localStorage.brush_color_blue = COLOR[2];
 	}
 }
 
 function onBackgroundColorSelectorChange( event )
 {
 	BACKGROUND_COLOR = backgroundColorSelector.getColor();
-	
+
 	menu.setBackgroundColor( BACKGROUND_COLOR );
-	
+
 	document.body.style.backgroundColor = 'rgb(' + BACKGROUND_COLOR[0] + ', ' + BACKGROUND_COLOR[1] + ', ' + BACKGROUND_COLOR[2] + ')';
-	
+
 	if (STORAGE)
 	{
 		localStorage.background_color_red = BACKGROUND_COLOR[0];
 		localStorage.background_color_green = BACKGROUND_COLOR[1];
-		localStorage.background_color_blue = BACKGROUND_COLOR[2];				
+		localStorage.background_color_blue = BACKGROUND_COLOR[2];
 	}
 }
 
@@ -344,7 +329,7 @@ function onBackgroundColorSelectorChange( event )
 function onMenuForegroundColor()
 {
 	cleanPopUps();
-	
+
 	foregroundColorSelector.show();
 	foregroundColorSelector.container.style.left = ((SCREEN_WIDTH - foregroundColorSelector.container.offsetWidth) / 2) + 'px';
 	foregroundColorSelector.container.style.top = ((SCREEN_HEIGHT - foregroundColorSelector.container.offsetHeight) / 2) + 'px';
@@ -371,7 +356,6 @@ function onMenuSelectorChange()
 
 	changeBrush(menu.selector.selectedIndex);
 
-	window.location.hash = BRUSHES[menu.selector.selectedIndex];
 }
 
 function onMenuMouseOver()
@@ -393,12 +377,19 @@ function onMenuSave()
 
 function onMenuClear()
 {
-		
-	context.clearRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+  clearCanvas();
+  socket.emit('clear');
 
-	saveToLocalStorage();
+}
 
-	changeBrush(menu.selector.selectedIndex);
+function clearCanvas() {
+
+  context.clearRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+  saveToLocalStorage();
+
+  changeBrush(menu.selector.selectedIndex);
+
 }
 
 function onMenuAbout()
@@ -418,25 +409,25 @@ function onCanvasMouseDown( event )
 
 	clearTimeout(saveTimeOut);
 	cleanPopUps();
-	
+
 	if (altKeyIsDown)
 	{
 		flatten();
-		
+
 		data = flattenCanvas.getContext("2d").getImageData(0, 0, flattenCanvas.width, flattenCanvas.height).data;
 		position = (event.clientX + (event.clientY * canvas.width)) * 4;
-		
+
 		foregroundColorSelector.setColor( [ data[position], data[position + 1], data[position + 2] ] );
-		
+
 		return;
 	}
-	
+
 	BRUSH_PRESSURE = wacom && wacom.isWacom ? wacom.pressure : 1;
-	
+
 	brush.strokeStart( event.clientX, event.clientY );
-    
+
     strokeCoordinates = [{x : event.clientX, y : event.clientY}];
-    
+
 	window.addEventListener('mousemove', onCanvasMouseMove, false);
 	window.addEventListener('mouseup', onCanvasMouseUp, false);
 }
@@ -444,7 +435,7 @@ function onCanvasMouseDown( event )
 function onCanvasMouseMove( event )
 {
 	BRUSH_PRESSURE = wacom && wacom.isWacom ? wacom.pressure : 1;
-	
+
 	brush.stroke( event.clientX, event.clientY );
     strokeCoordinates.push({x : event.clientX, y : event.clientY});
 }
@@ -453,14 +444,14 @@ function onCanvasMouseUp()
 {
 	brush.strokeEnd();
     if (strokeCoordinates && strokeCoordinates.length >= 1){
-        socket.emit('stroke', { brush: brushName, coords: strokeCoordinates, color: COLOR});    
+        socket.emit('stroke', { brush: brushName, coords: strokeCoordinates, color: COLOR});
         //console.log("Sending", {brush: brushName, coords: strokeCoordinates});
     }
-    
+
     strokeCoordinates = null;
 	window.removeEventListener('mousemove', onCanvasMouseMove, false);
 	window.removeEventListener('mouseup', onCanvasMouseUp, false);
-	
+
 	if (STORAGE)
 	{
 		clearTimeout(saveTimeOut);
@@ -473,12 +464,12 @@ function onCanvasMouseUp()
 
 function onCanvasTouchStart( event )
 {
-	cleanPopUps();		
+	cleanPopUps();
 
 	if(event.touches.length == 1)
 	{
 		event.preventDefault();
-		
+
 		brush.strokeStart( event.touches[0].pageX, event.touches[0].pageY );
 		strokeCoordinates = [{x : event.touches[0].pageX, y : event.touches[0].pageY}];
 		window.addEventListener('touchmove', onCanvasTouchMove, false);
@@ -501,10 +492,10 @@ function onCanvasTouchEnd( event )
 	if(event.touches.length == 0)
 	{
 		event.preventDefault();
-		
+
 		brush.strokeEnd();
         if (strokeCoordinates && strokeCoordinates.length >= 1){
-            socket.emit('stroke', { brush: brushName, coords: strokeCoordinates, color: COLOR});    
+            socket.emit('stroke', { brush: brushName, coords: strokeCoordinates, color: COLOR});
         }
 		window.removeEventListener('touchmove', onCanvasTouchMove, false);
 		window.removeEventListener('touchend', onCanvasTouchEnd, false);
@@ -521,7 +512,7 @@ function saveToLocalStorage()
 function flatten()
 {
 	var context = flattenCanvas.getContext("2d");
-	
+
 	context.fillStyle = 'rgb(' + BACKGROUND_COLOR[0] + ', ' + BACKGROUND_COLOR[1] + ', ' + BACKGROUND_COLOR[2] + ')';
 	context.fillRect(0, 0, canvas.width, canvas.height);
 	context.drawImage(canvas, 0, 0);
@@ -534,13 +525,13 @@ function cleanPopUps()
 		foregroundColorSelector.hide();
 		isFgColorSelectorVisible = false;
 	}
-		
+
 	if (isBgColorSelectorVisible)
 	{
 		backgroundColorSelector.hide();
 		isBgColorSelectorVisible = false;
 	}
-	
+
 	if (isAboutVisible)
 	{
 		about.hide();
