@@ -426,7 +426,7 @@ function onCanvasMouseDown( event )
 
 	brush.strokeStart( event.clientX, event.clientY );
 
-    strokeCoordinates = [{x : event.clientX, y : event.clientY}];
+    strokeCoordinates = [event.clientX, event.clientY];
 
 	window.addEventListener('mousemove', onCanvasMouseMove, false);
 	window.addEventListener('mouseup', onCanvasMouseUp, false);

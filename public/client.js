@@ -4,23 +4,30 @@ var socket = io.connect('/');
 socket.emit('join', { room: room });
 
 var userBrushes = {};
-var defaultBrush;
+
+function ChangeBrush(user_id, brushName){
+    
+    var userBrushObj = userBrushes[user_id];
+    if (userBrushObj && userBrushObj.brushName == brushName){
+        return userBrushObj;    
+    } else if (userBrushObj){
+        userBrushObj.destroy();
+    }
+    var newBrushObj = eval("new " + brushName + "(context)");
+    userBrushes[user_id] = newBrushObj;
+    newBrushObj.brushName = brushName;
+    return newBrushObj;
+    
+}
 socket.on('new-brush', function (data) {
-  if (userBrushes[data.user_id]){
-    userBrushes[data.user_id].destroy();
-  }
-  var newBrush = eval("new " + data.brush + "(context)");
-  userBrushes[data.user_id] = newBrush;
+    ChangeBrush(data.user_id, data.brush);
 });
 socket.on('stroke', function(data){
   var origColor = COLOR;
-
-  if (!defaultBrush) {
-     defaultBrush = new sketchy(context);
-  }
-
-  var newBrush = userBrushes[data.user_id] || defaultBrush;
-  COLOR = data.color || COLOR
+  var newBrush = ChangeBrush(data.user_id, data.brush);
+  
+  COLOR = data.color || COLOR;
+  
   newBrush.strokeStart(data.coords.shift());
 
   var i = 0,
@@ -37,7 +44,7 @@ socket.on('stroke', function(data){
     } else {
       newBrush.strokeEnd();
     }
-
+    
     COLOR = origColor;
   };
 
