@@ -5,14 +5,14 @@ var express = require('express')
 
 
 // assuming io is the Socket.IO server object
-if (NODE_ENV == "production") {
+if (typeof(NODE_ENV) != "undefined" && NODE_ENV == "production") {
   io.configure(function () {
     io.set("transports", ["xhr-polling"]);
     io.set("polling duration", 10);
   });
 }
 
-app.listen(9999);
+app.listen(process.env.PORT || 9999);
 app.use(express.static(__dirname + '/public'));
 
 app.get("/", function(req, res) {
