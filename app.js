@@ -1,13 +1,25 @@
-var app = require('http').createServer(handler)
+var express = require('express')
+  , app = express.createServer()
   , io = require('socket.io').listen(app)
-  , fs = require('fs');
+  ;
 
-function handler (req, res) {
-  res.writeHead(200);
-  res.end("You've made it.");
+
+// assuming io is the Socket.IO server object
+if (NODE_ENV == "production") {
+  io.configure(function () {
+    io.set("transports", ["xhr-polling"]);
+    io.set("polling duration", 10);
+  });
 }
 
-app.listen(8888);
+app.listen(9999);
+app.use(express.static(__dirname + '/public'));
+
+app.get("/", function(req, res) {
+  res.writeHead(200);
+  res.end("You've made it.");
+});
+//app.listen(8888);
 
 var _id = 0;
 function getID() {

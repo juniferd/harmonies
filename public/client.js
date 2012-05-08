@@ -1,5 +1,5 @@
 var room = window.location.hash || "#default";
-var socket = io.connect('http://nicesho.es:8888');
+var socket = io.connect('/');
 
 socket.emit('join', { room: room });
 
