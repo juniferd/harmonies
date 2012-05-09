@@ -530,6 +530,7 @@ function cleanPopUps()
 	{
 		backgroundColorSelector.hide();
 		isBgColorSelectorVisible = false;
+        socket.emit('new-bgcolor', [BACKGROUND_COLOR[0], BACKGROUND_COLOR[1], BACKGROUND_COLOR[2]]);
 	}
 
 	if (isAboutVisible)

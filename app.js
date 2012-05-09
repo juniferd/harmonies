@@ -51,17 +51,21 @@ io.sockets.on('connection', function (socket) {
     }
     socket.join(_room);
     socket.emit('clear');
-
+    
     for (var i in _strokes[_room]) {
       socket.emit('stroke', _strokes[_room][i]);
     }
   });
-
+  socket.on('new-bgcolor', function(data){
+    if (data){
+      socket.broadcast.emit('new-bgcolor', data);  
+    }
+  });
   socket.on('clear', function() {
     socket.broadcast.to(_room).emit('clear');
     _strokes[_room] = [];
   });
-
+  
   socket.on('new-brush', function (data) {
     if (data) {
       data.user_id = _user_id;

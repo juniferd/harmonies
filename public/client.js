@@ -50,8 +50,12 @@ socket.on('stroke', function(data){
 
   doWork();
 });
+socket.on('new-bgcolor', function(data){
+  document.body.style.backgroundColor = 'rgb(' + data[0] + ', ' + data[1] + ', ' + data[2] + ')';
+});
 
 socket.on('clear', function() {
   console.log("clearing room");
   clearCanvas();
 });
+

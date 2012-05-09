@@ -101,5 +101,6 @@ Menu.prototype =
 		context.fillRect(0, 0, this.backgroundColor.width, this.backgroundColor.height);
 		context.fillStyle = 'rgba(0, 0, 0, 0.1)';
 		context.fillRect(0, 0, this.backgroundColor.width, 1);		
-	}
+        
+    }
 }
