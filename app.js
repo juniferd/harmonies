@@ -3,13 +3,6 @@ var express = require('express')
   , io = require('socket.io').listen(app)
   ;
 
-
-// assuming io is the Socket.IO server object
-io.configure(function () {
-  io.set("transports", ["xhr-polling"]);
-  io.set("polling duration", 10);
-});
-
 app.listen(process.env.PORT || 9999);
 app.use(express.static(__dirname + '/public'));
 
