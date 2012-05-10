@@ -2,13 +2,14 @@ const REV = 6,
        BRUSHES = ["sketchy", "shaded", "chrome", "fur", "longfur", "web", "", "simple", "squares", "ribbon", "", "circles", "grid"],
        USER_AGENT = navigator.userAgent.toLowerCase();
 
-var SCREEN_WIDTH = window.innerWidth,
-    SCREEN_HEIGHT = window.innerHeight,
+var SCREEN_WIDTH = window.innerWidth * 2,
+    SCREEN_HEIGHT = window.innerHeight * 2,
     BRUSH_SIZE = 1,
     BRUSH_PRESSURE = 1,
     COLOR = [0, 0, 0],
     BACKGROUND_COLOR = [250, 250, 250],
     STORAGE = window.localStorage,
+    ZOOM = 1,
     brush,
     strokeCoordinates = [],
     saveTimeOut,
@@ -160,6 +161,18 @@ function init()
 }
 
 
+function zoomBy(amount) {
+  ZOOM += amount;
+  if (ZOOM <= 0.5) { 
+    ZOOM = 0.5;
+  } else if (ZOOM >= 1.5) {
+    ZOOM = 1.5;
+  }
+
+  canvas.style.zoom = ZOOM;
+}
+
+
 // WINDOW
 
 function onWindowMouseMove( event )
@@ -204,6 +217,15 @@ function onWindowKeyDown( event )
 		case 70: // f
 			BRUSH_SIZE ++;
 			break;
+
+                case 187: // =
+                  zoomBy(0.1);
+                  break;
+
+                case 189: // -
+                  zoomBy(-0.1);
+                  break;
+
 	}
 }
 
@@ -384,7 +406,7 @@ function onMenuClear()
 
 function clearCanvas() {
 
-  context.clearRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+  context.clearRect(0, 0, canvas.width, canvas.height);
 
   saveToLocalStorage();
 
@@ -415,7 +437,7 @@ function onCanvasMouseDown( event )
 		flatten();
 
 		data = flattenCanvas.getContext("2d").getImageData(0, 0, flattenCanvas.width, flattenCanvas.height).data;
-		position = (event.clientX + (event.clientY * canvas.width)) * 4;
+		position = (event.clientX + (event.clientY * canvas.width)) * 5;
 
 		foregroundColorSelector.setColor( [ data[position], data[position + 1], data[position + 2] ] );
 
@@ -424,9 +446,9 @@ function onCanvasMouseDown( event )
 
 	BRUSH_PRESSURE = wacom && wacom.isWacom ? wacom.pressure : 1;
 
-	brush.strokeStart( event.clientX, event.clientY );
+	brush.strokeStart( event.clientX / ZOOM, event.clientY / ZOOM);
 
-    strokeCoordinates = [event.clientX, event.clientY];
+        strokeCoordinates = [event.clientX / ZOOM, event.clientY / ZOOM];
 
 	window.addEventListener('mousemove', onCanvasMouseMove, false);
 	window.addEventListener('mouseup', onCanvasMouseUp, false);
@@ -436,8 +458,8 @@ function onCanvasMouseMove( event )
 {
 	BRUSH_PRESSURE = wacom && wacom.isWacom ? wacom.pressure : 1;
 
-	brush.stroke( event.clientX, event.clientY );
-    strokeCoordinates.push([event.clientX, event.clientY]);
+	brush.stroke( event.clientX / ZOOM, event.clientY / ZOOM );
+        strokeCoordinates.push([event.clientX / ZOOM, event.clientY / ZOOM]);
 }
 
 function onCanvasMouseUp()
@@ -482,8 +504,8 @@ function onCanvasTouchMove( event )
 	if(event.touches.length == 1)
 	{
 		event.preventDefault();
-		brush.stroke( event.touches[0].pageX, event.touches[0].pageY );
-        strokeCoordinates.push([event.touches[0].pageX, event.touches[0].pageY]);
+		brush.stroke( event.touches[0].pageX / ZOOM, event.touches[0].pageY / ZOOM);
+        strokeCoordinates.push([event.touches[0].pageX / ZOOM, event.touches[0].pageY / ZOOM]);
 	}
 }
 
