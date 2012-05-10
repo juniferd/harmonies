@@ -29,7 +29,7 @@ About.prototype =
 
 		text = document.createElement("p");
 		text.style.textAlign = 'center';
-		text.innerHTML = 'Brush: <span class="key">d</span><span class="key">f</span> size, <span class="key">r</span> reset<br />Color: <span class="key">shift</span> wheel, <span class="key">alt</span> picker<br />';
+		text.innerHTML = 'Brush: <span class="key">d</span><span class="key">f</span> size, <span class="key">r</span> reset<br />Color: <span class="key">shift</span> wheel, <span class="key">alt</span> picker<br /> Zoom &amp; Pan: <span class="key">-</span> <span class="key">+</span> ';
 		containerText.appendChild(text);
 
 		text = document.createElement("p");
