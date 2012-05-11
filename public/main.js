@@ -75,18 +75,12 @@ function init() {
 
     menu = new Menu();
     menu.foregroundColor.addEventListener('click', onMenuForegroundColor, false);
-    menu.foregroundColor.addEventListener('touchend', onMenuForegroundColor, false);
     menu.backgroundColor.addEventListener('click', onMenuBackgroundColor, false);
-    menu.backgroundColor.addEventListener('touchend', onMenuBackgroundColor, false);
     menu.selector.addEventListener('change', onMenuSelectorChange, false);
     menu.save.addEventListener('click', onMenuSave, false);
-    menu.save.addEventListener('touchend', onMenuSave, false);
     menu.clear.addEventListener('click', onMenuClear, false);
-    menu.clear.addEventListener('touchend', onMenuClear, false);
     menu.pan.addEventListener('click', onMenuPan, false);
-    menu.pan.addEventListener('touchend', onMenuPan, false);
     menu.about.addEventListener('click', onMenuAbout, false);
-    menu.about.addEventListener('touchend', onMenuAbout, false);
     menu.container.addEventListener('mouseover', onMenuMouseOver, false);
     menu.container.addEventListener('mouseout', onMenuMouseOut, false);
     container.appendChild(menu.container);
