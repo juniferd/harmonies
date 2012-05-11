@@ -193,13 +193,19 @@ function onWindowKeyDown( event )
 			BRUSH_SIZE ++;
 			break;
 
-                case 187: // =
-                  zoomBy(0.1);
-                  break;
+        case 187: // =
+          if (!panModeOn){
+            zoomBy(0.1);
+            break;  
+          }
+          
 
-                case 189: // -
-                  zoomBy(-0.1);
-                  break;
+        case 189: // -
+            if (!panModeOn){
+              zoomBy(-0.1);
+              break;    
+            }
+                  
 
 	}
 }
@@ -361,14 +367,15 @@ function onMenuSave()
 }
 function onMenuPan(){
     if(panModeOn == true){
+        //turn pan mode off
         panModeOn = false;
         document.getElementById("pan").className="button";
         panCoords = null;
         panStart = null;
         return;
     }
-    panModeOn = true;
     //turn pan mode on
+    panModeOn = true;
     document.getElementById("pan").className="button selected";
 }
 
