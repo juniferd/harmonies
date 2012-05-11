@@ -188,18 +188,14 @@ function onWindowKeyDown(event) {
 
     case 187:
         // =
-        if (!panModeOn) {
-            zoomBy(0.1);
-            break;
-        }
+        zoomBy(0.1);
+        break;
 
 
     case 189:
         // -
-        if (!panModeOn) {
-            zoomBy(-0.1);
-            break;
-        }
+        zoomBy(-0.1);
+        break;
 
 
     }
