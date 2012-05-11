@@ -138,7 +138,7 @@ function init()
 
 function zoomBy(amount) {
   ZOOM += amount;
-  if (ZOOM <= 0.5) { 
+  if (ZOOM <= 0.5) {
     ZOOM = 0.5;
   } else if (ZOOM >= 1.5) {
     ZOOM = 1.5;
@@ -193,13 +193,13 @@ function onWindowKeyDown( event )
 			BRUSH_SIZE ++;
 			break;
 
-                case 187: // =
-                  zoomBy(0.1);
-                  break;
+        case 187: // =
+          zoomBy(0.1);
+          break;
 
-                case 189: // -
-                  zoomBy(-0.1);
-                  break;
+        case 189: // -
+          zoomBy(-0.1);
+          break;
 
 	}
 }
@@ -296,7 +296,7 @@ function onForegroundColorSelectorChange( event )
 
 	menu.setForegroundColor( COLOR );
 
-	}
+}
 
 function onBackgroundColorSelectorChange( event )
 {
@@ -362,14 +362,11 @@ function onMenuSave()
 function onMenuPan(){
     if(panModeOn == true){
         panModeOn = false;
-        document.getElementById("pan").className="button";
         panCoords = null;
         panStart = null;
         return;
     }
     panModeOn = true;
-    //turn pan mode on
-    document.getElementById("pan").className="button selected";
 }
 
 function onMenuClear()
@@ -425,23 +422,26 @@ function onCanvasMouseDown( event )
 
 		return;
 	} else if (panModeOn){
-        panStart = [event.clientX-panOffset[0], 
-                    event.clientY-panOffset[1]];
+        panStart = [event.clientX-panOffset[0], event.clientY-panOffset[1]];
        
         window.addEventListener('mousemove', onCanvasMouseMove, false);
 	    window.addEventListener('mouseup', onCanvasMouseUp, false);
 
         return;
-	}
+    }
 
 	BRUSH_PRESSURE = wacom && wacom.isWacom ? wacom.pressure : 1;
 
-        var xScaled = parseInt(-dX + (event.clientX) / ZOOM, 10);
-        var yScaled = parseInt(-dY + (event.clientY) / ZOOM, 10);
+        var xScaled = parseInt(event.clientX / ZOOM, 10);
+        var yScaled = parseInt(event.clientY / ZOOM, 10);
 
 	brush.strokeStart(xScaled, yScaled);
 
+<<<<<<< HEAD
+    strokeCoordinates = [event.clientX / ZOOM, event.clientY / ZOOM];
+=======
         strokeCoordinates = [xScaled, yScaled];
+>>>>>>> 7a312795ab7448c83f45f72cb1f28e853d598921
 
 	window.addEventListener('mousemove', onCanvasMouseMove, false);
 	window.addEventListener('mouseup', onCanvasMouseUp, false);
@@ -453,14 +453,14 @@ function onCanvasMouseMove( event )
         panCoords =[event.clientX, event.clientY];
         dX = panCoords[0]-panStart[0];
         dY = panCoords[1]-panStart[1];
-        PanCanvas(dX/ZOOM,dY/ZOOM);
+        PanCanvas(dX,dY);
 
         return;
     }
 	BRUSH_PRESSURE = wacom && wacom.isWacom ? wacom.pressure : 1;
 
-        var xScaled = parseInt((-dX + event.clientX) / ZOOM, 10);
-        var yScaled = parseInt((-dY + event.clientY) / ZOOM, 10);
+        var xScaled = parseInt(event.clientX / ZOOM, 10);
+        var yScaled = parseInt(event.clientY / ZOOM, 10);
 
 	brush.stroke(xScaled, yScaled);
         strokeCoordinates.push([xScaled, yScaled]);
@@ -472,7 +472,7 @@ function onCanvasMouseUp()
     window.removeEventListener('mouseup', onCanvasMouseUp, false);
     if (panModeOn){
         
-        panOffset = [dX, dY];
+        panOffset = [dX,dY];
         return;
     }
 	brush.strokeEnd();
@@ -482,6 +482,7 @@ function onCanvasMouseUp()
     }
 
     strokeCoordinates = null;
+	
 	
 
 }

@@ -80,8 +80,9 @@ Menu.prototype =
         space = document.createTextNode(" ");
         this.container.appendChild(space);
         
-        this.pan = document.createElement("Pan");
+        this.pan = document.createElement("span");
         this.pan.className = 'button';
+        this.pan.setAttribute("id","pan");
         this.pan.innerHTML = 'Pan';
         this.container.appendChild(this.pan);
         
