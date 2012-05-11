@@ -11,7 +11,7 @@ var SCREEN_WIDTH = window.innerWidth * 2,
     panCoords = [],
     panOffset = [0, 0],
     strokeCoordinates = [],
-    saveTimeOut, wacom, i, dX = 0,
+    wacom, i, dX = 0,
     dY = 0,
     origX = 0,
     origY = 0,
@@ -401,12 +401,66 @@ function onMenuAbout() {
 }
 
 
+// INPUT HELPERS
+
+function inputStart(x, y) {
+    if (panModeOn) {
+      panStart = [x - dX, y - dY];
+
+      return;
+    }
+
+    BRUSH_PRESSURE = wacom && wacom.isWacom ? wacom.pressure : 1;
+
+    var xScaled = parseInt((-dX + x) / ZOOM, 10);
+    var yScaled = parseInt((-dY + y) / ZOOM, 10);
+
+    brush.strokeStart(xScaled, yScaled);
+
+    strokeCoordinates = [xScaled, yScaled];
+}
+
+function inputContinue(x, y) {
+    if (panModeOn) {
+        panCoords = [x, y];
+        dX = panCoords[0] - panStart[0];
+        dY = panCoords[1] - panStart[1];
+        PanCanvas(dX / ZOOM, dY / ZOOM);
+
+        return;
+    }
+    BRUSH_PRESSURE = wacom && wacom.isWacom ? wacom.pressure : 1;
+
+    var xScaled = parseInt((-dX + x) / ZOOM, 10);
+    var yScaled = parseInt((-dY + y) / ZOOM, 10);
+
+    brush.stroke(xScaled, yScaled);
+    strokeCoordinates.push([xScaled, yScaled]);
+}
+
+function inputEnd() {
+    if (panModeOn) {
+        panOffset = [dX, dY];
+        return;
+    }
+
+    brush.strokeEnd();
+    if (strokeCoordinates && strokeCoordinates.length >= 1) {
+        socket.emit('stroke', {
+            brush: brushName,
+            coords: strokeCoordinates,
+            color: COLOR
+        });
+    }
+
+    strokeCoordinates = null;
+}
+
 // CANVAS
 
 function onCanvasMouseDown(event) {
     var data, position;
 
-    clearTimeout(saveTimeOut);
     cleanPopUps();
 
     if (altKeyIsDown) {
@@ -418,70 +472,27 @@ function onCanvasMouseDown(event) {
         foregroundColorSelector.setColor([data[position], data[position + 1], data[position + 2]]);
 
         return;
-    } else if (panModeOn) {
-        panStart = [event.clientX - dX, event.clientY - dY];
-
-        window.addEventListener('mousemove', onCanvasMouseMove, false);
-        window.addEventListener('mouseup', onCanvasMouseUp, false);
-
-        return;
     }
-
-    BRUSH_PRESSURE = wacom && wacom.isWacom ? wacom.pressure : 1;
-
-    var xScaled = parseInt((-dX + event.clientX) / ZOOM, 10);
-    var yScaled = parseInt((-dY + event.clientY) / ZOOM, 10);
-
-    brush.strokeStart(xScaled, yScaled);
-
-    strokeCoordinates = [xScaled, yScaled];
 
     window.addEventListener('mousemove', onCanvasMouseMove, false);
     window.addEventListener('mouseup', onCanvasMouseUp, false);
+
+    inputStart(event.clientX, event.clientY);
+
 }
 
 function onCanvasMouseMove(event) {
-    if (panModeOn) {
-        panCoords = [event.clientX, event.clientY];
-        dX = panCoords[0] - panStart[0];
-        dY = panCoords[1] - panStart[1];
-        PanCanvas(dX / ZOOM, dY / ZOOM);
-
-        return;
-    }
-    BRUSH_PRESSURE = wacom && wacom.isWacom ? wacom.pressure : 1;
-
-    var xScaled = parseInt((-dX + event.clientX) / ZOOM, 10);
-    var yScaled = parseInt((-dY + event.clientY) / ZOOM, 10);
-
-    brush.stroke(xScaled, yScaled);
-    strokeCoordinates.push([xScaled, yScaled]);
+    inputContinue(event.clientX, event.clientY);
 }
 
 function onCanvasMouseUp() {
     window.removeEventListener('mousemove', onCanvasMouseMove, false);
     window.removeEventListener('mouseup', onCanvasMouseUp, false);
-    if (panModeOn) {
 
-        panOffset = [dX, dY];
-        return;
-    }
-    brush.strokeEnd();
-    if (strokeCoordinates && strokeCoordinates.length >= 1) {
-        socket.emit('stroke', {
-            brush: brushName,
-            coords: strokeCoordinates,
-            color: COLOR
-        });
-    }
-
-    strokeCoordinates = null;
-
+    inputEnd();
 
 }
 
-
-//
 
 function onCanvasTouchStart(event) {
     cleanPopUps();
@@ -489,41 +500,28 @@ function onCanvasTouchStart(event) {
     if (event.touches.length == 1) {
         event.preventDefault();
 
-        var xScaled = parseInt(event.touches[0].pageX / ZOOM, 10);
-        var yScaled = parseInt(event.touches[0].pageY / ZOOM, 10);
-        brush.strokeStart(xScaled, yScaled);
-        strokeCoordinates = [
-            [xScaled, yScaled]
-        ];
         window.addEventListener('touchmove', onCanvasTouchMove, false);
         window.addEventListener('touchend', onCanvasTouchEnd, false);
+
+        inputStart(event.touches[0].pageX, event.touches[0].pageY);
     }
 }
 
 function onCanvasTouchMove(event) {
     if (event.touches.length == 1) {
         event.preventDefault();
-        var xScaled = parseInt(event.touches[0].pageX / ZOOM, 10);
-        var yScaled = parseInt(event.touches[0].pageY / ZOOM, 10);
-        brush.stroke(xScaled, yScaled);
-        strokeCoordinates.push([xScaled, yScaled]);
+
+        inputContinue(event.touches[0].pageX, event.touches[0].pageY);
     }
 }
 
 function onCanvasTouchEnd(event) {
     if (event.touches.length == 0) {
         event.preventDefault();
-
-        brush.strokeEnd();
-        if (strokeCoordinates && strokeCoordinates.length >= 1) {
-            socket.emit('stroke', {
-                brush: brushName,
-                coords: strokeCoordinates,
-                color: COLOR
-            });
-        }
         window.removeEventListener('touchmove', onCanvasTouchMove, false);
         window.removeEventListener('touchend', onCanvasTouchEnd, false);
+
+        inputEnd();
     }
 }
 
