@@ -8,7 +8,6 @@ var SCREEN_WIDTH = window.innerWidth * 2,
     BRUSH_PRESSURE = 1,
     COLOR = [0, 0, 0],
     BACKGROUND_COLOR = [250, 250, 250],
-    STORAGE = window.localStorage,
     ZOOM = 1,
     brush,
     strokeCoordinates = [],
@@ -40,9 +39,6 @@ function init()
 
 	if (USER_AGENT.search("android") > -1 || USER_AGENT.search("iphone") > -1)
 		BRUSH_SIZE = 2;
-
-	if (USER_AGENT.search("safari") > -1 && USER_AGENT.search("chrome") == -1) // Safari
-		STORAGE = false;
 
 	document.body.style.backgroundRepeat = 'no-repeat';
 	document.body.style.backgroundPosition = 'center center';
@@ -99,36 +95,6 @@ function init()
 	menu.container.addEventListener('mouseover', onMenuMouseOver, false);
 	menu.container.addEventListener('mouseout', onMenuMouseOut, false);
 	container.appendChild(menu.container);
-
-	if (STORAGE)
-	{
-		if (localStorage.canvas)
-		{
-			localStorageImage = new Image();
-
-			localStorageImage.addEventListener("load", function(event)
-			{
-				localStorageImage.removeEventListener(event.type, arguments.callee, false);
-				context.drawImage(localStorageImage,0,0);
-			}, false);
-
-			localStorageImage.src = localStorage.canvas;
-		}
-
-		if (localStorage.brush_color_red)
-		{
-			COLOR[0] = localStorage.brush_color_red;
-			COLOR[1] = localStorage.brush_color_green;
-			COLOR[2] = localStorage.brush_color_blue;
-		}
-
-		if (localStorage.background_color_red)
-		{
-			BACKGROUND_COLOR[0] = localStorage.background_color_red;
-			BACKGROUND_COLOR[1] = localStorage.background_color_green;
-			BACKGROUND_COLOR[2] = localStorage.background_color_blue;
-		}
-	}
 
 	foregroundColorSelector.setColor( COLOR );
 	backgroundColorSelector.setColor( BACKGROUND_COLOR );
@@ -321,12 +287,6 @@ function onForegroundColorSelectorChange( event )
 
 	menu.setForegroundColor( COLOR );
 
-	if (STORAGE)
-	{
-		localStorage.brush_color_red = COLOR[0];
-		localStorage.brush_color_green = COLOR[1];
-		localStorage.brush_color_blue = COLOR[2];
-	}
 }
 
 function onBackgroundColorSelectorChange( event )
@@ -337,12 +297,6 @@ function onBackgroundColorSelectorChange( event )
 
 	document.body.style.backgroundColor = 'rgb(' + BACKGROUND_COLOR[0] + ', ' + BACKGROUND_COLOR[1] + ', ' + BACKGROUND_COLOR[2] + ')';
 
-	if (STORAGE)
-	{
-		localStorage.background_color_red = BACKGROUND_COLOR[0];
-		localStorage.background_color_green = BACKGROUND_COLOR[1];
-		localStorage.background_color_blue = BACKGROUND_COLOR[2];
-	}
 }
 
 
@@ -480,11 +434,6 @@ function onCanvasMouseUp()
 	window.removeEventListener('mousemove', onCanvasMouseMove, false);
 	window.removeEventListener('mouseup', onCanvasMouseUp, false);
 
-	if (STORAGE)
-	{
-		clearTimeout(saveTimeOut);
-		saveTimeOut = setTimeout(saveToLocalStorage, 2000, true);
-	}
 }
 
 

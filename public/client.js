@@ -78,7 +78,6 @@ socket.on('new-bgcolor', function(data){
 });
 
 socket.on('clear', function() {
-  console.log("clearing room");
   clearCanvas();
 });
 
