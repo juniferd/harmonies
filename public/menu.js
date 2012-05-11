@@ -14,6 +14,7 @@ Menu.prototype =
 	save: null,
 	clear: null,
 	about: null,
+    pan: null,
 	
 	init: function()
 	{
@@ -75,7 +76,15 @@ Menu.prototype =
 		this.clear.className = 'button';
 		this.clear.innerHTML = 'Clear';
 		this.container.appendChild(this.clear);
-
+        
+        space = document.createTextNode(" ");
+        this.container.appendChild(space);
+        
+        this.pan = document.createElement("Pan");
+        this.pan.className = 'button';
+        this.pan.innerHTML = 'Pan';
+        this.container.appendChild(this.pan);
+        
 		separator = document.createTextNode(" | ");
 		this.container.appendChild(separator);
 

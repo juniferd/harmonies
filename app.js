@@ -51,7 +51,7 @@ io.sockets.on('connection', function (socket) {
   });
   socket.on('new-bgcolor', function(data){
     if (data){
-      socket.broadcast.emit('new-bgcolor', data);  
+      socket.broadcast.to(_room).emit('new-bgcolor', data);  
     }
   });
   socket.on('clear', function() {
