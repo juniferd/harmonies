@@ -1,4 +1,5 @@
 var room = window.location.hash || "#default";
+
 var socket = io.connect('http://nicesho.es:8888/');
 
 socket.emit('join', { room: room });
@@ -81,3 +82,9 @@ socket.on('clear', function() {
   clearCanvas();
 });
 
+// Constantly query the location hash for changes
+setInterval(function() {
+  if (window.location.hash && window.location.hash != room) {
+    window.location.reload();
+  }
+}, 50);
