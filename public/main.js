@@ -163,7 +163,7 @@ function init()
 
 function zoomBy(amount) {
   ZOOM += amount;
-  if (ZOOM <= 0.5) { 
+  if (ZOOM <= 0.5) {
     ZOOM = 0.5;
   } else if (ZOOM >= 1.5) {
     ZOOM = 1.5;
@@ -446,9 +446,12 @@ function onCanvasMouseDown( event )
 
 	BRUSH_PRESSURE = wacom && wacom.isWacom ? wacom.pressure : 1;
 
-	brush.strokeStart( event.clientX / ZOOM, event.clientY / ZOOM);
+        var xScaled = parseInt(event.clientX / ZOOM, 10);
+        var yScaled = parseInt(event.clientY / ZOOM, 10);
 
-        strokeCoordinates = [event.clientX / ZOOM, event.clientY / ZOOM];
+	brush.strokeStart(xScaled, yScaled);
+
+        strokeCoordinates = [xScaled, yScaled];
 
 	window.addEventListener('mousemove', onCanvasMouseMove, false);
 	window.addEventListener('mouseup', onCanvasMouseUp, false);
@@ -458,8 +461,11 @@ function onCanvasMouseMove( event )
 {
 	BRUSH_PRESSURE = wacom && wacom.isWacom ? wacom.pressure : 1;
 
-	brush.stroke( event.clientX / ZOOM, event.clientY / ZOOM );
-        strokeCoordinates.push([event.clientX / ZOOM, event.clientY / ZOOM]);
+        var xScaled = parseInt(event.clientX / ZOOM, 10);
+        var yScaled = parseInt(event.clientY / ZOOM, 10);
+
+	brush.stroke(xScaled, yScaled);
+        strokeCoordinates.push([xScaled, yScaled]);
 }
 
 function onCanvasMouseUp()
@@ -492,8 +498,10 @@ function onCanvasTouchStart( event )
 	{
 		event.preventDefault();
 
-		brush.strokeStart( event.touches[0].pageX, event.touches[0].pageY );
-		strokeCoordinates = [[event.touches[0].pageX, event.touches[0].pageY]];
+                var xScaled = parseInt(event.touches[0].pageX / ZOOM, 10);
+                var yScaled = parseInt(event.touches[0].pageY / ZOOM, 10);
+		brush.strokeStart( xScaled, yScaled);
+		strokeCoordinates = [[xScaled, yScaled]];
 		window.addEventListener('touchmove', onCanvasTouchMove, false);
 		window.addEventListener('touchend', onCanvasTouchEnd, false);
 	}
@@ -504,8 +512,10 @@ function onCanvasTouchMove( event )
 	if(event.touches.length == 1)
 	{
 		event.preventDefault();
-		brush.stroke( event.touches[0].pageX / ZOOM, event.touches[0].pageY / ZOOM);
-        strokeCoordinates.push([event.touches[0].pageX / ZOOM, event.touches[0].pageY / ZOOM]);
+                var xScaled = parseInt(event.touches[0].pageX / ZOOM, 10);
+                var yScaled = parseInt(event.touches[0].pageY / ZOOM, 10);
+		brush.stroke(xScaled, yScaled);
+                strokeCoordinates.push([xScaled, yScaled]);
 	}
 }
 
