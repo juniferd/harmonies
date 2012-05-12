@@ -23,7 +23,10 @@ var SCREEN_WIDTH = window.innerWidth * 2,
     isMenuMouseOver = false,
     colorKeyIsDown = false,
     pickerKeyIsDown = false,
-    panModeOn = false;
+    panModeOn = false,
+    eraseModeOn = false,
+    lastCompositeOperation,
+    lastColor = [0,0,0];
 
 init();
 
@@ -80,6 +83,7 @@ function init() {
     menu.save.addEventListener('click', onMenuSave, false);
     menu.clear.addEventListener('click', onMenuClear, false);
     menu.pan.addEventListener('click', onMenuPan, false);
+    menu.erase.addEventListener('click', onMenuErase, false);
     menu.about.addEventListener('click', onMenuAbout, false);
     menu.container.addEventListener('mouseover', onMenuMouseOver, false);
     menu.container.addEventListener('mouseout', onMenuMouseOut, false);
@@ -165,12 +169,16 @@ function onWindowKeyDown(event) {
     case 16:
         // Shift
         pickerKeyIsDown = true;
-        console.log('alt key is down');
         break;
 
     case 68:
         // d
         if (BRUSH_SIZE > 1) BRUSH_SIZE--;
+        break;
+
+    case 69:
+        // e
+        onMenuErase();
         break;
 
     case 70:
@@ -284,7 +292,7 @@ function changeBrush(i) {
 // COLOR SELECTORS
 
 function onForegroundColorSelectorChange(event) {
-    COLOR = foregroundColorSelector.getColor();
+    lastColor = COLOR = foregroundColorSelector.getColor();
 
     menu.setForegroundColor(COLOR);
 
@@ -339,6 +347,9 @@ function onMenuSelectorChange() {
 
 
     changeBrush(menu.selector.selectedIndex);
+    if (eraseModeOn) {
+      context.globalCompositeOperation = "destination-out";
+    }
 
 }
 
@@ -354,6 +365,28 @@ function onMenuSave() {
     // window.open(canvas.toDataURL('image/png'),'mywindow');
     flatten();
     window.open(flattenCanvas.toDataURL('image/png'), 'mywindow');
+}
+
+function onMenuErase() {
+    if (eraseModeOn == true) {
+        eraseModeOn = false;
+
+        context.globalCompositeOperation = lastCompositeOperation;
+        COLOR = lastColor;
+
+        document.getElementById("erase").className = "button";
+        return;
+    }
+
+    //turn erase mode on
+    eraseModeOn = true;
+    lastCompositeOperation = context.globalCompositeOperation;
+
+    context.globalCompositeOperation = "destination-out";
+    COLOR = [0,0,0];
+
+
+    document.getElementById("erase").className = "button selected";
 }
 
 function onMenuPan() {
@@ -428,7 +461,11 @@ function inputStart(x, y) {
         return;
     }
 
-    BRUSH_PRESSURE = wacom && wacom.isWacom ? wacom.pressure : 1;
+    if (eraseModeOn) {
+      BRUSH_PRESSURE = 1;
+    } else {
+      BRUSH_PRESSURE = wacom && wacom.isWacom ? wacom.pressure : 1;
+    }
 
     var xScaled = parseInt((-dX + x) / ZOOM, 10);
     var yScaled = parseInt((-dY + y) / ZOOM, 10);
@@ -451,7 +488,13 @@ function inputContinue(x, y) {
 
         return;
     }
-    BRUSH_PRESSURE = wacom && wacom.isWacom ? wacom.pressure : 1;
+
+
+    if (eraseModeOn) {
+      BRUSH_PRESSURE = 1;
+    } else {
+      BRUSH_PRESSURE = wacom && wacom.isWacom ? wacom.pressure : 1;
+    }
 
     var xScaled = parseInt((-dX + x) / ZOOM, 10);
     var yScaled = parseInt((-dY + y) / ZOOM, 10);
@@ -474,7 +517,8 @@ function inputEnd() {
         socket.emit('stroke', {
             brush: brushName,
             coords: strokeCoordinates,
-            color: COLOR
+            color: COLOR,
+            erase: eraseModeOn
         });
     }
 

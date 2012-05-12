@@ -13,6 +13,7 @@ Menu.prototype = {
     clear: null,
     about: null,
     pan: null,
+    erase: null,
 
     init: function() {
         var option, space, separator, color_width = 15,
@@ -82,6 +83,12 @@ Menu.prototype = {
         this.pan.setAttribute("id", "pan");
         this.pan.innerHTML = 'Pan';
         this.container.appendChild(this.pan);
+
+        this.erase = document.createElement("span");
+        this.erase.className = 'button';
+        this.erase.setAttribute("id", "erase");
+        this.erase.innerHTML = 'Erase';
+        this.container.appendChild(this.erase);
 
         separator = document.createTextNode(" | ");
         this.container.appendChild(separator);

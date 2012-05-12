@@ -13,12 +13,11 @@ var midStroke = false;
 function nextStroke() {
     if (!midStroke && pendingStrokes.length > 0) {
         var data = pendingStrokes.shift();
-        traceStroke(data.brush, data.coords, data.color);
+        traceStroke(data.brush, data.coords, data.color, data.erase);
     }
 }
 
-function traceStroke(newBrush, coords, color) {
-
+function traceStroke(newBrush, coords, color, erase) {
     midStroke = true;
     newBrush.strokeStart(coords.shift());
 
@@ -27,9 +26,18 @@ function traceStroke(newBrush, coords, color) {
 
     var origColor = COLOR;
     var doWork = function() {
+            if (erase) {
+                var lastCompositeOperation = context.globalCompositeOperation;
+                context.globalCompositeOperation = "destination-out";
+            }
+
             COLOR = color || COLOR;
             for (var n = 0; i < coords.length && n < queue_size; i++, n++) {
                 newBrush.stroke(coords[i][0], coords[i][1]);
+            }
+
+            if (erase) {
+              context.globalCompositeOperation = lastCompositeOperation;
             }
 
             if (i < coords.length) {
@@ -74,7 +82,8 @@ socket.on('stroke', function(data) {
     pendingStrokes.push({
         brush: newBrush,
         coords: data.coords,
-        color: color
+        color: color,
+        erase: data.erase
     });
     nextStroke();
 });
