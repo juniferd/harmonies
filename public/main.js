@@ -437,6 +437,9 @@ function onMenuMore(){
 }
 function PanCanvas(dX, dY) {
 
+    dX = parseInt(dX, 10);
+    dY = parseInt(dY, 10);
+
     var el = document.getElementById("drawing");
     el.style.transform = "translate(" + dX + "px," + dY + "px)";
     el.style.msTransform = "translate(" + dX + "px," + dY + "px)";
