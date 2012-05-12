@@ -90,7 +90,7 @@ Menu.prototype = {
         this.zoomout = document.createElement("span");
         this.zoomout.className = 'button';
         this.zoomout.setAttribute("id", "zoomout");
-        this.zoomout.innerHTML = ' - ';
+        this.zoomout.innerHTML = '-';
 
         zoomControls.appendChild(this.zoomout);
         zoomLabel = document.createElement("span");
@@ -101,7 +101,7 @@ Menu.prototype = {
         this.zoomin = document.createElement("span");
         this.zoomin.className = 'button';
         this.zoomin.setAttribute("id", "zoomin");
-        this.zoomin.innerHTML = ' + ';
+        this.zoomin.innerHTML = '+';
         zoomControls.appendChild(this.zoomin);
 
 
