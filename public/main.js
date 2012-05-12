@@ -21,8 +21,8 @@ var SCREEN_WIDTH = window.innerWidth * 2,
     isBgColorSelectorVisible = false,
     isAboutVisible = false,
     isMenuMouseOver = false,
-    shiftKeyIsDown = false,
-    altKeyIsDown = false,
+    colorKeyIsDown = false,
+    pickerKeyIsDown = false,
     panModeOn = false;
 
 init();
@@ -149,20 +149,23 @@ function onWindowResize() {
 }
 
 function onWindowKeyDown(event) {
-    if (shiftKeyIsDown) return;
+    if (colorKeyIsDown) return;
 
     switch (event.keyCode) {
-    case 16:
-        // Shift
-        shiftKeyIsDown = true;
-        foregroundColorSelector.container.style.left = mouseX - 125 + 'px';
-        foregroundColorSelector.container.style.top = mouseY - 125 + 'px';
-        foregroundColorSelector.container.style.visibility = 'visible';
+    case 67:
+        // c
+        colorKeyIsDown = true;
+        if (event.shiftKey) {
+          onMenuBackgroundColor(null, true);
+        } else {
+          onMenuForegroundColor(null, true);
+        }
         break;
 
-    case 18:
-        // Alt
-        altKeyIsDown = true;
+    case 16:
+        // Shift
+        pickerKeyIsDown = true;
+        console.log('alt key is down');
         break;
 
     case 68:
@@ -197,15 +200,16 @@ function onWindowKeyDown(event) {
 
 function onWindowKeyUp(event) {
     switch (event.keyCode) {
-    case 16:
-        // Shift
-        shiftKeyIsDown = false;
+    case 67:
+        // c
+        colorKeyIsDown = false;
         foregroundColorSelector.container.style.visibility = 'hidden';
+        backgroundColorSelector.container.style.visibility = 'hidden';
         break;
 
-    case 18:
-        // Alt
-        altKeyIsDown = false;
+    case 16:
+        // Shift
+        pickerKeyIsDown = false;
         break;
 
     case 82:
@@ -222,8 +226,8 @@ function onWindowKeyUp(event) {
 }
 
 function onWindowBlur(event) {
-    shiftKeyIsDown = false;
-    altKeyIsDown = false;
+    colorKeyIsDown = false;
+    pickerKeyIsDown = false;
 }
 
 
@@ -298,22 +302,34 @@ function onBackgroundColorSelectorChange(event) {
 
 // MENU
 
-function onMenuForegroundColor() {
+function onMenuForegroundColor(_, moveToMouse) {
     cleanPopUps();
 
-    foregroundColorSelector.show();
-    foregroundColorSelector.container.style.left = ((SCREEN_WIDTH - foregroundColorSelector.container.offsetWidth) / 2) + 'px';
-    foregroundColorSelector.container.style.top = ((SCREEN_HEIGHT - foregroundColorSelector.container.offsetHeight) / 2) + 'px';
+    if (moveToMouse) {
+        foregroundColorSelector.container.style.left = mouseX - 125 + 'px';
+        foregroundColorSelector.container.style.top = mouseY - 125 + 'px';
+        foregroundColorSelector.container.style.visibility = 'visible';
+    } else {
+      foregroundColorSelector.show();
+      foregroundColorSelector.container.style.left = ((SCREEN_WIDTH - foregroundColorSelector.container.offsetWidth) / 2) + 'px';
+        foregroundColorSelector.container.style.top = ((SCREEN_HEIGHT - foregroundColorSelector.container.offsetHeight) / 2) + 'px';
+    }
 
     isFgColorSelectorVisible = true;
 }
 
-function onMenuBackgroundColor() {
+function onMenuBackgroundColor(_, moveToMouse) {
     cleanPopUps();
 
-    backgroundColorSelector.show();
-    backgroundColorSelector.container.style.left = ((SCREEN_WIDTH - backgroundColorSelector.container.offsetWidth) / 2) + 'px';
-    backgroundColorSelector.container.style.top = ((SCREEN_HEIGHT - backgroundColorSelector.container.offsetHeight) / 2) + 'px';
+    if (moveToMouse) {
+        backgroundColorSelector.container.style.left = mouseX - 125 + 'px';
+        backgroundColorSelector.container.style.top = mouseY - 125 + 'px';
+        backgroundColorSelector.container.style.visibility = 'visible';
+    } else {
+      backgroundColorSelector.show();
+      backgroundColorSelector.container.style.left = ((SCREEN_WIDTH - backgroundColorSelector.container.offsetWidth) / 2) + 'px';
+        backgroundColorSelector.container.style.top = ((SCREEN_HEIGHT - backgroundColorSelector.container.offsetHeight) / 2) + 'px';
+    }
 
     isBgColorSelectorVisible = true;
 }
@@ -400,6 +416,18 @@ function inputStart(x, y) {
       return;
     }
 
+    // TODO: Actually get color picker working
+    if (pickerKeyIsDown) {
+        flatten();
+
+        data = flattenCanvas.getContext("2d").getImageData(0, 0, flattenCanvas.width, flattenCanvas.height).data;
+        position = (x / ZOOM + (y / ZOOM * canvas.width)) * 5;
+
+        foregroundColorSelector.setColor([data[position], data[position + 1], data[position + 2]]);
+
+        return;
+    }
+
     BRUSH_PRESSURE = wacom && wacom.isWacom ? wacom.pressure : 1;
 
     var xScaled = parseInt((-dX + x) / ZOOM, 10);
@@ -411,6 +439,10 @@ function inputStart(x, y) {
 }
 
 function inputContinue(x, y) {
+    if (pickerKeyIsDown) {
+      return;
+    }
+
     if (panModeOn) {
         panCoords = [x, y];
         dX = panCoords[0] - panStart[0];
@@ -425,7 +457,10 @@ function inputContinue(x, y) {
     var yScaled = parseInt((-dY + y) / ZOOM, 10);
 
     brush.stroke(xScaled, yScaled);
-    strokeCoordinates.push([xScaled, yScaled]);
+
+    if (strokeCoordinates) {
+      strokeCoordinates.push([xScaled, yScaled]);
+    }
 }
 
 function inputEnd() {
@@ -452,17 +487,6 @@ function onCanvasMouseDown(event) {
     var data, position;
 
     cleanPopUps();
-
-    if (altKeyIsDown) {
-        flatten();
-
-        data = flattenCanvas.getContext("2d").getImageData(0, 0, flattenCanvas.width, flattenCanvas.height).data;
-        position = (event.clientX + (event.clientY * canvas.width)) * 5;
-
-        foregroundColorSelector.setColor([data[position], data[position + 1], data[position + 2]]);
-
-        return;
-    }
 
     window.addEventListener('mousemove', onCanvasMouseMove, false);
     window.addEventListener('mouseup', onCanvasMouseUp, false);
