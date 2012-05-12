@@ -2,8 +2,8 @@ const REV = 6, BRUSHES = ["sketchy", "shaded", "chrome", "fur", "longfur", "web"
 
 var SCREEN_WIDTH = window.innerWidth * 2,
     SCREEN_HEIGHT = window.innerHeight * 2,
-    CANVAS_WIDTH = 1600,
-    CANVAS_HEIGHT = 988,
+    CANVAS_WIDTH = 1000,
+    CANVAS_HEIGHT = 1000,
     BRUSH_SIZE = 1,
     BRUSH_PRESSURE = 1,
     COLOR = [0, 0, 0],
