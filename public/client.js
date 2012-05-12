@@ -49,6 +49,9 @@ function traceStroke(newBrush, coords, color, erase) {
                 midStroke = false;
                 nextStroke();
             }
+
+            COLOR = origColor;
+
         };
 
     doWork();
@@ -62,7 +65,10 @@ function ChangeBrush(user_id, brushName) {
     } else if (userBrushObj) {
         userBrushObj.destroy();
     }
+
+    var lastCompositeOperation = context.globalCompositeOperation;
     var newBrushObj = eval("new " + brushName + "(context)");
+    context.globalCompositeOperation = lastCompositeOperation;
     userBrushes[user_id] = newBrushObj;
     newBrushObj.brushName = brushName;
     return newBrushObj;
