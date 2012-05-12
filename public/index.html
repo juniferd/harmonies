@@ -42,11 +42,13 @@
 
       .gui
       {
+        position: absolute;
+        top: -20px;
         color: #ccc;
         width: 320px;
         background-color: #fff;
         border-bottom: 1px solid #ddd;
-        padding: 5px 10px;
+        padding: 5px 0px;
         text-align: center;
         text-transform: uppercase;
         line-height: 18px;
@@ -58,12 +60,19 @@
         padding:2px;
         margin: -2px 0 0;
       }
+      .expanded{
+        top: 0;
+      }
       .button
       {
+        margin: 3px 4px;
         padding: 2px;
         cursor: pointer;
       }
-
+      .color-button{
+        margin: 3px 3px -3px;
+        cursor: pointer;
+      }
       .key
       {
         padding: 0px 8px;

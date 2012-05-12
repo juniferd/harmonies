@@ -17,7 +17,7 @@ var SCREEN_WIDTH = window.innerWidth * 2,
     origY = 0,
     mouseX = 0,
     mouseY = 0,
-    container, foregroundColorSelector, backgroundColorSelector, menu, about, canvas, flattenCanvas, context, isFgColorSelectorVisible = false,
+    container, foregroundColorSelector, backgroundColorSelector, menu, about, zoomin, zoomout, more, canvas, flattenCanvas, context, isFgColorSelectorVisible = false,
     isBgColorSelectorVisible = false,
     isAboutVisible = false,
     isMenuMouseOver = false,
@@ -25,6 +25,7 @@ var SCREEN_WIDTH = window.innerWidth * 2,
     pickerKeyIsDown = false,
     panModeOn = false,
     eraseModeOn = false,
+    moreOpen = false,
     lastCompositeOperation,
     lastColor = [0,0,0];
 
@@ -84,7 +85,10 @@ function init() {
     menu.clear.addEventListener('click', onMenuClear, false);
     menu.pan.addEventListener('click', onMenuPan, false);
     menu.erase.addEventListener('click', onMenuErase, false);
+    menu.zoomin.addEventListener('click', onMenuZoomIn, false);
+    menu.zoomout.addEventListener('click', onMenuZoomOut, false);
     menu.about.addEventListener('click', onMenuAbout, false);
+    menu.more.addEventListener('click', onMenuMore, false);
     menu.container.addEventListener('mouseover', onMenuMouseOver, false);
     menu.container.addEventListener('mouseout', onMenuMouseOut, false);
     container.appendChild(menu.container);
@@ -388,7 +392,13 @@ function onMenuErase() {
 
     document.getElementById("erase").className = "button selected";
 }
-
+function onMenuZoomIn(){
+    zoomBy(0.1);
+    
+}
+function onMenuZoomOut(){
+    zoomBy(-0.1);
+}
 function onMenuPan() {
     if (panModeOn == true) {
         //turn pan mode off
@@ -408,7 +418,19 @@ function onMenuClear() {
     socket.emit('clear');
 
 }
-
+function onMenuMore(){
+    if (moreOpen == true){
+        moreOpen = false;
+        document.getElementById("more").className = "button";
+        document.getElementById("more").innerHTML = "More";
+        document.getElementById("main-menu").className = "gui";
+        return;
+    }
+    moreOpen = true;
+    document.getElementById("more").className = "button selected";
+    document.getElementById("more").innerHTML = "Less";
+    document.getElementById("main-menu").className = "gui expanded";
+}
 function PanCanvas(dX, dY) {
 
     var el = document.getElementById("drawing");

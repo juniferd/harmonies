@@ -14,6 +14,9 @@ Menu.prototype = {
     about: null,
     pan: null,
     erase: null,
+    more: null,
+    zoomin: null,
+    zoomout: null,
 
     init: function() {
         var option, space, separator, color_width = 15,
@@ -21,82 +24,81 @@ Menu.prototype = {
 
         this.container = document.createElement("div");
         this.container.className = 'gui';
-        this.container.style.position = 'absolute';
-        this.container.style.top = '0px';
-
-        this.foregroundColor = document.createElement("canvas");
-        this.foregroundColor.style.marginBottom = '-3px';
-        this.foregroundColor.style.cursor = 'pointer';
-        this.foregroundColor.width = color_width;
-        this.foregroundColor.height = color_height;
-        this.container.appendChild(this.foregroundColor);
-
-        this.setForegroundColor(COLOR);
-
-        space = document.createTextNode(" ");
-        this.container.appendChild(space);
-
-        this.backgroundColor = document.createElement("canvas");
-        this.backgroundColor.style.marginBottom = '-3px';
-        this.backgroundColor.style.cursor = 'pointer';
-        this.backgroundColor.width = color_width;
-        this.backgroundColor.height = color_height;
-        this.container.appendChild(this.backgroundColor);
-
-        this.setBackgroundColor(BACKGROUND_COLOR);
-
-        space = document.createTextNode(" ");
-        this.container.appendChild(space);
-
-        this.selector = document.createElement("select");
-
-        for (i = 0; i < BRUSHES.length; i++) {
-            option = document.createElement("option");
-            option.id = i;
-            option.innerHTML = BRUSHES[i].toUpperCase();
-            this.selector.appendChild(option);
-        }
-
-        this.container.appendChild(this.selector);
-
-        space = document.createTextNode(" ");
-        this.container.appendChild(space);
+        this.container.setAttribute("id", "main-menu");
+        
+        this.about = document.createElement("About");
+        this.about.className = 'button';
+        this.about.innerHTML = 'About';
+        this.container.appendChild(this.about);
 
         this.save = document.createElement("span"); //getElementById('save');
         this.save.className = 'button';
         this.save.innerHTML = 'Save';
         this.container.appendChild(this.save);
 
-        space = document.createTextNode(" ");
-        this.container.appendChild(space);
-
         this.clear = document.createElement("Clear");
         this.clear.className = 'button';
         this.clear.innerHTML = 'Clear';
         this.container.appendChild(this.clear);
+        
+        separator = document.createElement("br");
+        this.container.appendChild(separator);
+        
+        this.foregroundColor = document.createElement("canvas");
+        this.foregroundColor.className = 'color-button';
+        this.foregroundColor.width = color_width;
+        this.foregroundColor.height = color_height;
+        this.container.appendChild(this.foregroundColor);
 
-        space = document.createTextNode(" ");
-        this.container.appendChild(space);
+        this.setForegroundColor(COLOR);
+
+        this.backgroundColor = document.createElement("canvas");
+        this.backgroundColor.className = 'color-button';
+        this.backgroundColor.width = color_width;
+        this.backgroundColor.height = color_height;
+        this.container.appendChild(this.backgroundColor);
+
+        this.setBackgroundColor(BACKGROUND_COLOR);
+
+        this.selector = document.createElement("select");
+        for (i = 0; i < BRUSHES.length; i++) {
+            option = document.createElement("option");
+            option.id = i;
+            option.innerHTML = BRUSHES[i].toUpperCase();
+            this.selector.appendChild(option);
+        }
+        this.container.appendChild(this.selector);
 
         this.pan = document.createElement("span");
         this.pan.className = 'button';
         this.pan.setAttribute("id", "pan");
         this.pan.innerHTML = 'Pan';
         this.container.appendChild(this.pan);
-
+        
+        this.zoomin = document.createElement("span");
+        this.zoomin.className = 'button';
+        this.zoomin.setAttribute("id", "zoomin");
+        this.zoomin.innerHTML = ' + ';
+        this.container.appendChild(this.zoomin);
+        
+        this.zoomout = document.createElement("span");
+        this.zoomout.className = 'button';
+        this.zoomout.setAttribute("id", "zoomout");
+        this.zoomout.innerHTML = ' - ';
+        this.container.appendChild(this.zoomout);
+        
         this.erase = document.createElement("span");
         this.erase.className = 'button';
         this.erase.setAttribute("id", "erase");
         this.erase.innerHTML = 'Erase';
         this.container.appendChild(this.erase);
 
-        separator = document.createTextNode(" | ");
-        this.container.appendChild(separator);
-
-        this.about = document.createElement("About");
-        this.about.className = 'button';
-        this.about.innerHTML = 'About';
-        this.container.appendChild(this.about);
+        this.more = document.createElement("span");
+        this.more.className = 'button';
+        this.more.setAttribute("id", "more");
+        this.more.innerHTML = 'More';
+        this.container.appendChild(this.more);
+        
     },
 
     setForegroundColor: function(color) {
