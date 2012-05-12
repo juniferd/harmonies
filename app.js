@@ -19,6 +19,7 @@ function getID() {
 };
 
 var _strokes = { "#default" : []};
+var _bgColors = { };
 
 io.sockets.on('connection', function (socket) {
   var _user_id = getID();
@@ -40,13 +41,19 @@ io.sockets.on('connection', function (socket) {
     socket.join(_room);
     socket.emit('clear');
     
+    if (_bgColors[_room]) {
+      socket.emit('new-bgcolor', _bgColors[_room]);
+    }
+
     for (var i in _strokes[_room]) {
       socket.emit('stroke', _strokes[_room][i]);
     }
   });
+
   socket.on('new-bgcolor', function(data){
     if (data){
       socket.broadcast.to(_room).emit('new-bgcolor', data);  
+      _bgColors[_room] = data;
     }
   });
   socket.on('clear', function() {
