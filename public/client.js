@@ -29,6 +29,9 @@ function traceStroke(newBrush, coords, color, erase) {
             if (erase) {
                 var lastCompositeOperation = context.globalCompositeOperation;
                 context.globalCompositeOperation = "destination-out";
+            } else {
+                var lastCompositeOperation = context.globalCompositeOperation;
+                context.globalCompositeOperation = "source-over";
             }
 
             COLOR = color || COLOR;
@@ -36,12 +39,10 @@ function traceStroke(newBrush, coords, color, erase) {
                 newBrush.stroke(coords[i][0], coords[i][1]);
             }
 
-            if (erase) {
-              context.globalCompositeOperation = lastCompositeOperation;
-            }
+            context.globalCompositeOperation = lastCompositeOperation;
 
             if (i < coords.length) {
-                setTimeout(doWork);
+                setTimeout(doWork, 20);
             } else {
                 newBrush.strokeEnd();
                 midStroke = false;
