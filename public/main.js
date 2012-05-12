@@ -404,6 +404,8 @@ function onMenuPan() {
         //turn pan mode off
         panModeOn = false;
         document.getElementById("pan").className = "button";
+        document.getElementById("zoomControls").style.display = 'none';
+        document.getElementById("brushControls").style.display = 'inline-block';
         panCoords = null;
         panStart = null;
         return;
@@ -411,6 +413,8 @@ function onMenuPan() {
     //turn pan mode on
     panModeOn = true;
     document.getElementById("pan").className = "button selected";
+    document.getElementById("zoomControls").style.display = 'inline-block';
+    document.getElementById("brushControls").style.display = 'none';
 }
 
 function onMenuClear() {
@@ -423,13 +427,13 @@ function onMenuMore(){
         moreOpen = false;
         document.getElementById("more").className = "button";
         document.getElementById("more").innerHTML = "More";
-        document.getElementById("main-menu").className = "gui";
+        document.getElementById("moreControls").style.display = "none";
         return;
     }
     moreOpen = true;
     document.getElementById("more").className = "button selected";
     document.getElementById("more").innerHTML = "Less";
-    document.getElementById("main-menu").className = "gui expanded";
+    document.getElementById("moreControls").style.display = "block";
 }
 function PanCanvas(dX, dY) {
 

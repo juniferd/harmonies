@@ -25,30 +25,42 @@ Menu.prototype = {
         this.container = document.createElement("div");
         this.container.className = 'gui';
         this.container.setAttribute("id", "main-menu");
-        
+
+        var moreControls = document.createElement("div");
+        moreControls.setAttribute("id", "moreControls");
+        moreControls.style.display = "none";
+
+        this.container.appendChild(moreControls);
+
         this.about = document.createElement("About");
         this.about.className = 'button';
         this.about.innerHTML = 'About';
-        this.container.appendChild(this.about);
+        moreControls.appendChild(this.about);
 
         this.save = document.createElement("span"); //getElementById('save');
         this.save.className = 'button';
         this.save.innerHTML = 'Save';
-        this.container.appendChild(this.save);
+        moreControls.appendChild(this.save);
 
         this.clear = document.createElement("Clear");
         this.clear.className = 'button';
         this.clear.innerHTML = 'Clear';
-        this.container.appendChild(this.clear);
-        
-        separator = document.createElement("br");
-        this.container.appendChild(separator);
-        
+        moreControls.appendChild(this.clear);
+
+        var zoomControls = document.createElement("span");
+        zoomControls.setAttribute("id", "zoomControls");
+
+        var brushControls = document.createElement("span");
+        brushControls.setAttribute("id", "brushControls");
+
+        this.container.appendChild(zoomControls);
+        this.container.appendChild(brushControls);
+
         this.foregroundColor = document.createElement("canvas");
         this.foregroundColor.className = 'color-button';
         this.foregroundColor.width = color_width;
         this.foregroundColor.height = color_height;
-        this.container.appendChild(this.foregroundColor);
+        brushControls.appendChild(this.foregroundColor);
 
         this.setForegroundColor(COLOR);
 
@@ -56,7 +68,7 @@ Menu.prototype = {
         this.backgroundColor.className = 'color-button';
         this.backgroundColor.width = color_width;
         this.backgroundColor.height = color_height;
-        this.container.appendChild(this.backgroundColor);
+        brushControls.appendChild(this.backgroundColor);
 
         this.setBackgroundColor(BACKGROUND_COLOR);
 
@@ -67,26 +79,34 @@ Menu.prototype = {
             option.innerHTML = BRUSHES[i].toUpperCase();
             this.selector.appendChild(option);
         }
-        this.container.appendChild(this.selector);
+        brushControls.appendChild(this.selector);
 
         this.pan = document.createElement("span");
         this.pan.className = 'button';
         this.pan.setAttribute("id", "pan");
         this.pan.innerHTML = 'Pan';
         this.container.appendChild(this.pan);
-        
-        this.zoomin = document.createElement("span");
-        this.zoomin.className = 'button';
-        this.zoomin.setAttribute("id", "zoomin");
-        this.zoomin.innerHTML = ' + ';
-        this.container.appendChild(this.zoomin);
-        
+
         this.zoomout = document.createElement("span");
         this.zoomout.className = 'button';
         this.zoomout.setAttribute("id", "zoomout");
         this.zoomout.innerHTML = ' - ';
-        this.container.appendChild(this.zoomout);
-        
+
+        zoomControls.appendChild(this.zoomout);
+        zoomLabel = document.createElement("span");
+        zoomLabel.innerHTML = " Zoom ";
+        zoomControls.appendChild(zoomLabel);
+
+
+        this.zoomin = document.createElement("span");
+        this.zoomin.className = 'button';
+        this.zoomin.setAttribute("id", "zoomin");
+        this.zoomin.innerHTML = ' + ';
+        zoomControls.appendChild(this.zoomin);
+
+
+        zoomControls.style.display = 'none';
+
         this.erase = document.createElement("span");
         this.erase.className = 'button';
         this.erase.setAttribute("id", "erase");
@@ -98,7 +118,7 @@ Menu.prototype = {
         this.more.setAttribute("id", "more");
         this.more.innerHTML = 'More';
         this.container.appendChild(this.more);
-        
+
     },
 
     setForegroundColor: function(color) {
