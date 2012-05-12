@@ -312,7 +312,18 @@ function onBackgroundColorSelectorChange(event) {
 }
 
 
+function setCanvasCursor() {
+  if (panModeOn) {
+    canvas.style.cursor = 'move';
+  } else if (eraseModeOn) {
+    canvas.style.cursor = 'url(/images/eraser.png) 6 8, hand';
+  } else {
+    canvas.style.cursor = 'crosshair';
+  }
+}
+
 // MENU
+
 
 function onMenuForegroundColor(_, moveToMouse) {
     cleanPopUps();
@@ -379,6 +390,7 @@ function onMenuErase() {
         COLOR = lastColor;
 
         document.getElementById("erase").className = "button";
+        setCanvasCursor();
         return;
     }
 
@@ -391,7 +403,9 @@ function onMenuErase() {
 
 
     document.getElementById("erase").className = "button selected";
+    setCanvasCursor();
 }
+
 function onMenuZoomIn(){
     zoomBy(0.1);
     
@@ -408,6 +422,7 @@ function onMenuPan() {
         document.getElementById("brushControls").style.display = 'inline-block';
         panCoords = null;
         panStart = null;
+        setCanvasCursor();
         return;
     }
     //turn pan mode on
@@ -415,6 +430,7 @@ function onMenuPan() {
     document.getElementById("pan").className = "button selected";
     document.getElementById("zoomControls").style.display = 'inline-block';
     document.getElementById("brushControls").style.display = 'none';
+    setCanvasCursor();
 }
 
 function onMenuClear() {
