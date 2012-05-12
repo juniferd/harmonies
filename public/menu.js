@@ -81,6 +81,16 @@ Menu.prototype = {
         }
         brushControls.appendChild(this.selector);
 
+        this.erase = document.createElement("span");
+        this.erase.className = 'button';
+        this.erase.setAttribute("id", "erase");
+        this.erase.innerHTML = 'Erase';
+        brushControls.appendChild(this.erase);
+
+        var separator = document.createElement("span");
+        separator.innerHTML = "|";
+        brushControls.appendChild(separator);
+
         this.pan = document.createElement("span");
         this.pan.className = 'button';
         this.pan.setAttribute("id", "pan");
@@ -106,12 +116,6 @@ Menu.prototype = {
 
 
         zoomControls.style.display = 'none';
-
-        this.erase = document.createElement("span");
-        this.erase.className = 'button';
-        this.erase.setAttribute("id", "erase");
-        this.erase.innerHTML = 'Erase';
-        this.container.appendChild(this.erase);
 
         this.more = document.createElement("span");
         this.more.className = 'button';
