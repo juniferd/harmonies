@@ -18,16 +18,11 @@ function getID() {
   return _id;
 };
 
-var _brushes = {};
 var _strokes = { "#default" : []};
 
 io.sockets.on('connection', function (socket) {
   var _user_id = getID();
   var _room = "#default";
-
-  for (var i in _brushes) {
-    socket.emit('new-brush', _brushes[i]);
-  };
 
   socket.on('stroke', function (data) {
     if (data && data.coords && data.coords.length >= 1) {
@@ -58,20 +53,8 @@ io.sockets.on('connection', function (socket) {
     socket.broadcast.to(_room).emit('clear');
     _strokes[_room] = [];
   });
-  
-  socket.on('new-brush', function (data) {
-    if (data) {
-      data.user_id = _user_id;
-      _brushes[_user_id] = data;
-      socket.broadcast.emit('new-brush', data);
-    }
-  });
 
   socket.on('disconnect', function() {
-    if (_brushes[_user_id]) {
-      delete _brushes[_user_id];
-    }
   });
 
-  socket.broadcast.to(_room).emit('new-brush', { user_id: _user_id, brush: 'sketchy' });
 });

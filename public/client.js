@@ -69,10 +69,6 @@ function ChangeBrush(user_id, brushName) {
 
 }
 
-socket.on('new-brush', function(data) {
-    ChangeBrush(data.user_id, data.brush);
-});
-
 socket.on('stroke', function(data) {
     var origColor = COLOR;
     var newBrush = ChangeBrush(data.user_id, data.brush);
