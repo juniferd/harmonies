@@ -2,11 +2,15 @@ const REV = 6, BRUSHES = ["sketchy", "shaded", "chrome", "fur", "longfur", "web"
 
 var SCREEN_WIDTH = window.innerWidth * 2,
     SCREEN_HEIGHT = window.innerHeight * 2,
+    CANVAS_WIDTH = 2400,
+    CANVAS_HEIGHT = 1483,
     BRUSH_SIZE = 1,
     BRUSH_PRESSURE = 1,
     COLOR = [0, 0, 0],
     BACKGROUND_COLOR = [250, 250, 250],
     ZOOM = 1,
+    MAX_ZOOM = 1.2,
+    MIN_ZOOM = 0.4,
     brush, panStart = [],
     panCoords = [],
     panOffset = [0, 0],
@@ -55,8 +59,8 @@ function init() {
      */
 
     canvas = document.createElement("canvas");
-    canvas.width = SCREEN_WIDTH;
-    canvas.height = SCREEN_HEIGHT;
+    canvas.width = CANVAS_WIDTH;
+    canvas.height = CANVAS_HEIGHT;
     canvas.setAttribute("id", "drawing");
     canvas.style.cursor = 'crosshair';
     container.appendChild(canvas);
@@ -64,8 +68,8 @@ function init() {
     context = canvas.getContext("2d");
 
     flattenCanvas = document.createElement("canvas");
-    flattenCanvas.width = SCREEN_WIDTH;
-    flattenCanvas.height = SCREEN_HEIGHT;
+    flattenCanvas.width = CANVAS_WIDTH;
+    flattenCanvas.height = CANVAS_HEIGHT;
 
     palette = new Palette();
 
@@ -126,10 +130,10 @@ function init() {
 function zoomBy(amount) {
     ZOOM += amount;
 
-    if (ZOOM <= 0.5) {
-        ZOOM = 0.5;
-    } else if (ZOOM >= 1.5) {
-        ZOOM = 1.5;
+    if (ZOOM <= MIN_ZOOM) {
+        ZOOM = MIN_ZOOM;
+    } else if (ZOOM >= MAX_ZOOM) {
+        ZOOM = MAX_ZOOM;
     } else {
         dX = origX * ZOOM;
         dY = origY * ZOOM;
