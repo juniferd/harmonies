@@ -89,8 +89,7 @@ function init() {
     menu.clear.addEventListener('click', onMenuClear, false);
     menu.pan.addEventListener('click', onMenuPan, false);
     menu.erase.addEventListener('click', onMenuErase, false);
-    menu.zoomin.addEventListener('click', onMenuZoomIn, false);
-    menu.zoomout.addEventListener('click', onMenuZoomOut, false);
+    menu.zoom.addEventListener('change', onMenuZoomChange, false);
     menu.about.addEventListener('click', onMenuAbout, false);
     menu.more.addEventListener('click', onMenuMore, false);
     menu.container.addEventListener('mouseover', onMenuMouseOver, false);
@@ -140,6 +139,11 @@ function zoomBy(amount) {
     }
 
     canvas.style.zoom = ZOOM;
+}
+
+function zoomTo(zoom) {
+    ZOOM = zoom;
+    zoomBy(0);
 }
 
 
@@ -201,13 +205,15 @@ function onWindowKeyDown(event) {
 
     case 187:
         // =
-        zoomBy(0.1);
+        menu.zoom.value = parseInt(menu.zoom.value) + 1.0;
+        onMenuZoomChange();
         break;
 
 
     case 189:
         // -
-        zoomBy(-0.1);
+        menu.zoom.value = parseInt(menu.zoom.value) - 1.0;
+        onMenuZoomChange();
         break;
 
 
@@ -410,13 +416,10 @@ function onMenuErase() {
     setCanvasCursor();
 }
 
-function onMenuZoomIn(){
-    zoomBy(0.1);
-    
+function onMenuZoomChange() {
+  zoomTo(parseFloat(menu.zoom.value) / 10);
 }
-function onMenuZoomOut(){
-    zoomBy(-0.1);
-}
+
 function onMenuPan() {
     if (panModeOn == true) {
         //turn pan mode off
