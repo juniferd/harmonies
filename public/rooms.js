@@ -11,6 +11,7 @@ Rooms.prototype = {
         this.container = document.createElement("div");
         this.container.className = 'gui';
         this.container.style.position = 'absolute';
+        container.style.textAlign = 'left';
         this.container.style.top = '0px';
         this.container.style.visibility = 'hidden';
 
@@ -26,21 +27,34 @@ Rooms.prototype = {
       container.style.visibility = 'hidden';
 
       socket.emit('list-rooms', function(room_list) {
-        if (room_list.length == 0) {
-          container.innerHTML = "oh. there are no active rooms, currently. create one!"
-          return;
-        }
+        container.innerHTML = '';
 
-        container.innerHTML = 'Click on a room below to join. <br />';
+        var newRoom = document.createElement('div');
+        newRoom.innerHTML = 'new room'; 
+        var roomInput = document.createElement('input');
+        newRoom.appendChild(roomInput);
+        roomInput.setAttribute('type', 'text');
+        roomInput.style.marginLeft = "25px";
 
-        room_list.forEach(function(room) {
-          var href = document.createElement("a");
-          href.setAttribute("href", room);
-          href.innerHTML = room + "<br />";
-          container.appendChild(href);
-          container.style.visibility = 'visible';
+        roomInput.addEventListener('change', function(event) {
+          window.location.hash = roomInput.value;
         });
+        container.appendChild(newRoom);
+
+        // Add the room list.
+        if (room_list.length > 0) {
+          container.innerHTML += 'or click on a room below to join <br />';
+
+          room_list.forEach(function(room) {
+            var href = document.createElement("a");
+            href.setAttribute("href", room);
+            href.innerHTML = room + "<br />";
+            container.appendChild(href);
+            container.style.visibility = 'visible';
+          });
+        }
       });
+
     },
 
     show: function() {

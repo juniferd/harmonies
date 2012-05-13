@@ -26,11 +26,13 @@ var SCREEN_WIDTH = window.innerWidth * 2,
     isAboutVisible = false,
     isRoomsVisible = false,
     isMenuMouseOver = false,
+    modalDialogOpen = false,
     colorKeyIsDown = false,
     pickerKeyIsDown = false,
     panModeOn = false,
     eraseModeOn = false,
     moreOpen = false,
+    newStroke = false,
     lastCompositeOperation,
     lastColor = [0,0,0];
 
@@ -180,7 +182,7 @@ function onWindowResize() {
 }
 
 function onWindowKeyDown(event) {
-    if (colorKeyIsDown) return;
+    if (modalDialogOpen) return;
 
     switch (event.keyCode) {
     case 67:
@@ -238,8 +240,7 @@ function onWindowKeyUp(event) {
     case 67:
         // c
         colorKeyIsDown = false;
-        foregroundColorSelector.container.style.visibility = 'hidden';
-        backgroundColorSelector.container.style.visibility = 'hidden';
+        cleanPopUps();
         break;
 
     case 16:
@@ -251,6 +252,7 @@ function onWindowKeyUp(event) {
         // r
         changeBrush(menu.selector.selectedIndex);
         break;
+
     case 66:
         // b
         document.body.style.backgroundImage = null;
@@ -309,11 +311,10 @@ function changeBrush(i) {
     if (brush) {
         brush.destroy();
     }
+
+    newStroke = true;
     brush = eval("new " + BRUSHES[i] + "(context)");
     brushName = BRUSHES[i];
-    socket.emit('new-brush', {
-        brush: brushName
-    });
 }
 
 // COLOR SELECTORS
@@ -362,6 +363,7 @@ function onMenuForegroundColor(_, moveToMouse) {
     }
 
     isFgColorSelectorVisible = true;
+    modalDialogOpen = true;
 }
 
 function onMenuBackgroundColor(_, moveToMouse) {
@@ -378,6 +380,7 @@ function onMenuBackgroundColor(_, moveToMouse) {
     }
 
     isBgColorSelectorVisible = true;
+    modalDialogOpen = true;
 }
 
 function onMenuSelectorChange() {
@@ -467,6 +470,8 @@ function onMenuMore(){
         return;
     }
     moreOpen = true;
+    modalDialogOpen = true;
+
     document.getElementById("more").className = "button selected";
     document.getElementById("more").innerHTML = "Less";
     document.getElementById("moreControls").style.display = "block";
@@ -500,17 +505,19 @@ function clearCanvas() {
 function onMenuAbout() {
     cleanPopUps();
 
-    isAboutVisible = true;
     about.show();
+    isAboutVisible = true;
+    modalDialogOpen = true;
 }
 
 function onMenuRooms() {
     cleanPopUps();
 
-    isRoomsVisible = true;
-
     rooms.update();
     rooms.show();
+
+    isRoomsVisible = true;
+    modalDialogOpen = true;
 }
 
 
@@ -594,10 +601,12 @@ function inputEnd() {
             brush: brushName,
             coords: strokeCoordinates,
             color: COLOR,
-            erase: eraseModeOn
+            erase: eraseModeOn,
+            new: newStroke
         });
     }
 
+    newStroke = false;
     strokeCoordinates = null;
 }
 
@@ -701,6 +710,5 @@ function cleanPopUps() {
       moreOpen = false;
     }
 
-    menu.about.className = "button";
-    menu.rooms.className = "button";
+    modalDialogOpen = false;
 }

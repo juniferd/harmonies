@@ -57,10 +57,10 @@ function traceStroke(newBrush, coords, color, erase) {
     doWork();
 }
 
-function ChangeBrush(user_id, brushName) {
+function ChangeBrush(user_id, brushName, forceNew) {
 
     var userBrushObj = userBrushes[user_id];
-    if (userBrushObj && userBrushObj.brushName == brushName) {
+    if (userBrushObj && userBrushObj.brushName == brushName && !forceNew) {
         return userBrushObj;
     } else if (userBrushObj) {
         userBrushObj.destroy();
@@ -77,7 +77,7 @@ function ChangeBrush(user_id, brushName) {
 
 socket.on('stroke', function(data) {
     var origColor = COLOR;
-    var newBrush = ChangeBrush(data.user_id, data.brush);
+    var newBrush = ChangeBrush(data.user_id, data.brush, data.new);
 
     var color = data.color || COLOR;
 
@@ -89,6 +89,7 @@ socket.on('stroke', function(data) {
     });
     nextStroke();
 });
+
 socket.on('new-bgcolor', function(data) {
     document.body.style.backgroundColor = 'rgb(' + data[0] + ', ' + data[1] + ', ' + data[2] + ')';
     backgroundColorSelector.setColor(data);
