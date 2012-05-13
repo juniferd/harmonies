@@ -97,23 +97,25 @@ Menu.prototype = {
         this.pan.innerHTML = 'Pan';
         this.container.appendChild(this.pan);
 
-        this.zoom = document.createElement("input");
-        this.zoom.setAttribute("type", "range");
-        this.zoom.setAttribute("min", MIN_ZOOM * 10);
-        this.zoom.setAttribute("max", MAX_ZOOM * 10);
-        this.zoom.setAttribute("step", 1);
-        this.zoom.setAttribute("id",  "zoomer");;
+        this.zoomout = document.createElement("span");
+        this.zoomout.className = 'button';
+        this.zoomout.setAttribute("id", "zoomout");
+        this.zoomout.innerHTML = '-';
 
+        zoomControls.appendChild(this.zoomout);
         zoomLabel = document.createElement("span");
-        zoomLabel.innerHTML = "Zoom ";
+        zoomLabel.innerHTML = " Zoom ";
         zoomControls.appendChild(zoomLabel);
-        zoomControls.appendChild(this.zoom);
 
-        separator = document.createElement("span");
-        separator.innerHTML = "|";
-        zoomControls.appendChild(separator);
+
+        this.zoomin = document.createElement("span");
+        this.zoomin.className = 'button';
+        this.zoomin.setAttribute("id", "zoomin");
+        this.zoomin.innerHTML = '+';
+        zoomControls.appendChild(this.zoomin);
+
+
         zoomControls.style.display = 'none';
-
 
         this.more = document.createElement("span");
         this.more.className = 'button';
