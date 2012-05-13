@@ -40,7 +40,7 @@ io.sockets.on('connection', function (socket) {
     }
     socket.join(_room);
     socket.emit('clear');
-    
+
     if (_bgColors[_room]) {
       socket.emit('new-bgcolor', _bgColors[_room]);
     }
@@ -52,13 +52,25 @@ io.sockets.on('connection', function (socket) {
 
   socket.on('new-bgcolor', function(data){
     if (data){
-      socket.broadcast.to(_room).emit('new-bgcolor', data);  
+      socket.broadcast.to(_room).emit('new-bgcolor', data);
       _bgColors[_room] = data;
     }
   });
+
   socket.on('clear', function() {
     socket.broadcast.to(_room).emit('clear');
     _strokes[_room] = [];
+  });
+
+  socket.on('rooms', function(callback) {
+    var alrightRooms = [];
+    for (var room in _strokes) { 
+      if (_strokes[room].length > 0) {
+        alrightRooms.push(room);
+      }
+    }
+
+    callback(alrightRooms);
   });
 
   socket.on('disconnect', function() {

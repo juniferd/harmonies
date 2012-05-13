@@ -21,9 +21,10 @@ var SCREEN_WIDTH = window.innerWidth * 2,
     origY = 0,
     mouseX = 0,
     mouseY = 0,
-    container, foregroundColorSelector, backgroundColorSelector, menu, about, zoomin, zoomout, more, canvas, flattenCanvas, context, isFgColorSelectorVisible = false,
+    container, foregroundColorSelector, backgroundColorSelector, menu, about, rooms, zoomin, zoomout, more, canvas, flattenCanvas, context, isFgColorSelectorVisible = false,
     isBgColorSelectorVisible = false,
     isAboutVisible = false,
+    isRoomsVisible = false,
     isMenuMouseOver = false,
     colorKeyIsDown = false,
     pickerKeyIsDown = false,
@@ -92,6 +93,7 @@ function init() {
     menu.zoomin.addEventListener('click', onMenuZoomIn, false);
     menu.zoomout.addEventListener('click', onMenuZoomOut, false);
     menu.about.addEventListener('click', onMenuAbout, false);
+    menu.rooms.addEventListener('click', onMenuRooms, false);
     menu.more.addEventListener('click', onMenuMore, false);
     menu.container.addEventListener('mouseover', onMenuMouseOver, false);
     menu.container.addEventListener('mouseout', onMenuMouseOut, false);
@@ -106,6 +108,9 @@ function init() {
 
     about = new About();
     container.appendChild(about.container);
+
+    rooms = new Rooms();
+    container.appendChild(rooms.container);
 
     window.addEventListener('mousemove', onWindowMouseMove, false);
     window.addEventListener('resize', onWindowResize, false);
@@ -169,6 +174,9 @@ function onWindowResize() {
 
     about.container.style.left = ((SCREEN_WIDTH - about.container.offsetWidth) / 2) + 'px';
     about.container.style.top = ((SCREEN_HEIGHT - about.container.offsetHeight) / 2) + 'px';
+
+    rooms.container.style.left = ((SCREEN_WIDTH - about.container.offsetWidth) / 2) + 'px';
+    rooms.container.style.top = ((SCREEN_HEIGHT - about.container.offsetHeight) / 2) + 'px';
 }
 
 function onWindowKeyDown(event) {
@@ -456,6 +464,7 @@ function onMenuClear() {
 function onMenuMore(){
     if (moreOpen == true){
         moreOpen = false;
+        cleanPopUps();
         document.getElementById("more").className = "button";
         document.getElementById("more").innerHTML = "More";
         document.getElementById("moreControls").style.display = "none";
@@ -497,7 +506,19 @@ function onMenuAbout() {
 
     isAboutVisible = true;
     about.show();
+    menu.about.className = "button selected";
 }
+
+function onMenuRooms() {
+    cleanPopUps();
+
+    isRoomsVisible = true;
+
+    menu.rooms.className = "button selected";
+    rooms.update();
+    rooms.show();
+}
+
 
 
 // INPUT HELPERS
@@ -673,4 +694,12 @@ function cleanPopUps() {
         about.hide();
         isAboutVisible = false;
     }
+
+    if (isRoomsVisible) {
+        rooms.hide();
+        isRoomsVisible = false;
+    }
+
+    menu.about.className = "button";
+    menu.rooms.className = "button";
 }

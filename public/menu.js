@@ -32,7 +32,7 @@ Menu.prototype = {
 
         this.container.appendChild(moreControls);
 
-        this.about = document.createElement("About");
+        this.about = document.createElement("span");
         this.about.className = 'button';
         this.about.innerHTML = 'About';
         moreControls.appendChild(this.about);
@@ -42,10 +42,16 @@ Menu.prototype = {
         this.save.innerHTML = 'Save';
         moreControls.appendChild(this.save);
 
-        this.clear = document.createElement("Clear");
+        this.clear = document.createElement("span");
         this.clear.className = 'button';
         this.clear.innerHTML = 'Clear';
         moreControls.appendChild(this.clear);
+
+        this.rooms = document.createElement("span");
+        this.rooms.className = 'button';
+        this.rooms.innerHTML = 'Rooms';
+        moreControls.appendChild(this.rooms);
+
 
         var zoomControls = document.createElement("span");
         zoomControls.setAttribute("id", "zoomControls");
