@@ -18,6 +18,7 @@ Menu.prototype = {
     join: null,
     zoomin: null,
     zoomout: null,
+    users: null,
 
     init: function() {
         var option, space, separator, color_width = 15,
@@ -129,6 +130,10 @@ Menu.prototype = {
         this.rooms.setAttribute("id", "rooms");
         this.rooms.innerHTML = 'Room';
         this.container.appendChild(this.rooms);
+
+        this.users = document.createElement("div");
+        this.users.setAttribute("id", "user_list");
+        this.container.appendChild(this.users);
 
     },
 

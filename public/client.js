@@ -95,6 +95,26 @@ socket.on('new-bgcolor', function(data) {
     backgroundColorSelector.setColor(data);
 });
 
+socket.on('new-fgcolor', function(data) {
+
+  var width = 100.0 / Object.keys(data).length;
+  var userContainer = document.createElement("span");
+
+  for (var user in data) {
+    var color = data[user];
+    var userSwatch = document.createElement('span');
+    userSwatch.style.display = "inline-block";
+    userSwatch.style.width = width + "%";
+    userSwatch.className = 'user-swatch';
+
+    userSwatch.style.backgroundColor = 'rgb(' + color[0] + ', ' + color[1] + ', ' + color[2] + ')';
+    userContainer.appendChild(userSwatch);
+  }
+
+  menu.users.innerHTML = '';
+  menu.users.appendChild(userContainer);
+});
+
 socket.on('clear', function() {
     clearCanvas();
 });

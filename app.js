@@ -30,6 +30,7 @@ function array_shuffle (aArray) {
 };
 
 var _strokes = { "#default" : []};
+var _fgColors = { };
 var _bgColors = { };
 var _users = {};
 
@@ -52,12 +53,26 @@ io.sockets.on('connection', function (socket) {
     }
 
     _users[_user_id] = _room;
+
+    if (!_fgColors[_room]) {
+      _fgColors[_room] = {};
+    }
+
+    _fgColors[_room][_user_id] = [0,0,0];
+
+
     socket.join(_room);
     socket.emit('clear');
 
     if (_bgColors[_room]) {
       socket.emit('new-bgcolor', _bgColors[_room]);
     }
+
+    if (_fgColors[_room]) {
+      socket.emit('new-fgcolor', _fgColors[_room]);
+      socket.broadcast.emit('new-fgcolor', _fgColors[_room]);
+    }
+
 
     for (var i in _strokes[_room]) {
       socket.emit('stroke', _strokes[_room][i]);
@@ -69,6 +84,13 @@ io.sockets.on('connection', function (socket) {
       socket.broadcast.to(_room).emit('new-bgcolor', data);
       _bgColors[_room] = data;
     }
+  });
+
+  socket.on('new-fgcolor', function(data) {
+    _fgColors[_room][_user_id] = data;
+
+    socket.emit('new-fgcolor', _fgColors[_room]);
+    socket.broadcast.emit('new-fgcolor', _fgColors[_room]);
   });
 
   socket.on('clear', function() {
@@ -89,9 +111,15 @@ io.sockets.on('connection', function (socket) {
   });
 
   socket.on('disconnect', function() {
+    if (_fgColors[_room] && _fgColors[_room][_user_id]) {
+      delete _fgColors[_room][_user_id];
+    }
+
     if (_users[_user_id]) {
       delete _users[_user_id];
     }
+
+    socket.broadcast.emit('new-fgcolor', _fgColors[_room]);
   });
 
 });

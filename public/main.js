@@ -685,6 +685,7 @@ function cleanPopUps() {
     if (isFgColorSelectorVisible) {
         foregroundColorSelector.hide();
         isFgColorSelectorVisible = false;
+        socket.emit('new-fgcolor', [COLOR[0], COLOR[1], COLOR[2]]);
     }
 
     if (isBgColorSelectorVisible) {
