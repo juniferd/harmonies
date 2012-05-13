@@ -18,6 +18,17 @@ function getID() {
   return _id;
 };
 
+// This is an implementation of the Fisher-Yates algorithm, taken from
+// http://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
+function array_shuffle (aArray) {
+    for (var mTemp, j, i = aArray.length; i; ) {  // mTemp, j initialized here for shorter code
+        j = parseInt (Math.random () * i);  // introduces modulo bias (see below)
+        mTemp = aArray[--i];
+        aArray[i] = aArray[j];
+        aArray[j] = mTemp;
+    }
+};
+
 var _strokes = { "#default" : []};
 var _bgColors = { };
 var _users = {};
@@ -73,7 +84,8 @@ io.sockets.on('connection', function (socket) {
 
     var rooms = Object.keys(populatedRooms);
 
-    callback(rooms.slice(0, 5));
+    array_shuffle(rooms);
+    callback(rooms.slice(0, 3));
   });
 
   socket.on('disconnect', function() {
