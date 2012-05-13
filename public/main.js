@@ -463,11 +463,7 @@ function onMenuClear() {
 }
 function onMenuMore(){
     if (moreOpen == true){
-        moreOpen = false;
         cleanPopUps();
-        document.getElementById("more").className = "button";
-        document.getElementById("more").innerHTML = "More";
-        document.getElementById("moreControls").style.display = "none";
         return;
     }
     moreOpen = true;
@@ -506,7 +502,6 @@ function onMenuAbout() {
 
     isAboutVisible = true;
     about.show();
-    menu.about.className = "button selected";
 }
 
 function onMenuRooms() {
@@ -514,7 +509,6 @@ function onMenuRooms() {
 
     isRoomsVisible = true;
 
-    menu.rooms.className = "button selected";
     rooms.update();
     rooms.show();
 }
@@ -698,6 +692,13 @@ function cleanPopUps() {
     if (isRoomsVisible) {
         rooms.hide();
         isRoomsVisible = false;
+    }
+
+    if (moreOpen) {
+      document.getElementById("more").className = "button";
+      document.getElementById("more").innerHTML = "More";
+      document.getElementById("moreControls").style.display = "none";
+      moreOpen = false;
     }
 
     menu.about.className = "button";
