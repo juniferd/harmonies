@@ -21,7 +21,7 @@ var SCREEN_WIDTH = window.innerWidth * 2,
     origY = 0,
     mouseX = 0,
     mouseY = 0,
-    container, foregroundColorSelector, backgroundColorSelector, menu, about, rooms, zoomin, zoomout, more, canvas, flattenCanvas, context, isFgColorSelectorVisible = false,
+    container, foregroundColorSelector, backgroundColorSelector, menu, about, rooms, zoomin, zoomout, rooms, canvas, flattenCanvas, context, isFgColorSelectorVisible = false,
     isBgColorSelectorVisible = false,
     isAboutVisible = false,
     isRoomsVisible = false,
@@ -31,7 +31,7 @@ var SCREEN_WIDTH = window.innerWidth * 2,
     pickerKeyIsDown = false,
     panModeOn = false,
     eraseModeOn = false,
-    moreOpen = false,
+    isRoomsOpen = false,
     newStroke = false,
     lastCompositeOperation,
     lastColor = [0,0,0];
@@ -95,8 +95,8 @@ function init() {
     menu.zoomin.addEventListener('click', onMenuZoomIn, false);
     menu.zoomout.addEventListener('click', onMenuZoomOut, false);
     menu.about.addEventListener('click', onMenuAbout, false);
+    menu.join.addEventListener('click', onMenuJoin, false);
     menu.rooms.addEventListener('click', onMenuRooms, false);
-    menu.more.addEventListener('click', onMenuMore, false);
     menu.container.addEventListener('mouseover', onMenuMouseOver, false);
     menu.container.addEventListener('mouseout', onMenuMouseOut, false);
     container.appendChild(menu.container);
@@ -446,19 +446,18 @@ function onMenuPan() {
         //turn pan mode off
         panModeOn = false;
         document.getElementById("pan").className = "button";
-        document.getElementById("zoomControls").style.display = 'none';
-        document.getElementById("brushControls").style.display = 'inline-block';
         panCoords = null;
         panStart = null;
         setCanvasCursor();
-        return;
-    }
-    //turn pan mode on
-    panModeOn = true;
-    document.getElementById("pan").className = "button selected";
-    document.getElementById("zoomControls").style.display = 'inline-block';
-    document.getElementById("brushControls").style.display = 'none';
-    setCanvasCursor();
+    } else {
+      //turn pan mode on
+      panModeOn = true;
+      document.getElementById("pan").className = "button selected";
+      setCanvasCursor();
+    } 
+
+    displayControls();
+
 }
 
 function onMenuClear() {
@@ -466,18 +465,17 @@ function onMenuClear() {
     socket.emit('clear');
 
 }
-function onMenuMore(){
-    if (moreOpen == true){
+function onMenuRooms(){
+    if (isRoomsOpen == true){
         cleanPopUps();
-        return;
+    } else {
+      isRoomsOpen = true;
+      document.getElementById("rooms").className = "button selected";
     }
-    moreOpen = true;
-    modalDialogOpen = true;
 
-    document.getElementById("more").className = "button selected";
-    document.getElementById("more").innerHTML = "Less";
-    document.getElementById("moreControls").style.display = "block";
+    displayControls();
 }
+
 function PanCanvas() {
 
     var x = parseInt(dX / ZOOM, 10);
@@ -512,7 +510,7 @@ function onMenuAbout() {
     modalDialogOpen = true;
 }
 
-function onMenuRooms() {
+function onMenuJoin() {
     cleanPopUps();
 
     rooms.update();
@@ -705,12 +703,30 @@ function cleanPopUps() {
         isRoomsVisible = false;
     }
 
-    if (moreOpen) {
-      document.getElementById("more").className = "button";
-      document.getElementById("more").innerHTML = "More";
-      document.getElementById("moreControls").style.display = "none";
-      moreOpen = false;
+    if (isRoomsOpen) {
+      isRoomsOpen = false;
+      document.getElementById("rooms").className = "button";
     }
 
     modalDialogOpen = false;
+    displayControls();
+}
+
+function displayControls() {
+    if (isRoomsOpen) { 
+      document.getElementById('pan').style.display = 'none';
+      document.getElementById('roomControls').style.display = 'inline-block';
+      document.getElementById('zoomControls').style.display = 'none';
+      document.getElementById('brushControls').style.display = 'none';
+    } else if (panModeOn) {
+      document.getElementById('pan').style.display = 'inline-block';
+      document.getElementById('roomControls').style.display = 'none';
+      document.getElementById('zoomControls').style.display = 'inline-block';
+      document.getElementById('brushControls').style.display = 'none';
+    } else {
+      document.getElementById('pan').style.display = 'inline-block';
+      document.getElementById('roomControls').style.display = 'none';
+      document.getElementById('zoomControls').style.display = 'none';
+      document.getElementById('brushControls').style.display = 'inline-block';
+    }
 }

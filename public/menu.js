@@ -14,7 +14,8 @@ Menu.prototype = {
     about: null,
     pan: null,
     erase: null,
-    more: null,
+    rooms: null,
+    join: null,
     zoomin: null,
     zoomout: null,
 
@@ -26,31 +27,31 @@ Menu.prototype = {
         this.container.className = 'gui';
         this.container.setAttribute("id", "main-menu");
 
-        var moreControls = document.createElement("div");
-        moreControls.setAttribute("id", "moreControls");
-        moreControls.style.display = "none";
+        var roomControls = document.createElement("div");
+        roomControls.setAttribute("id", "roomControls");
+        roomControls.style.display = "none";
 
-        this.container.appendChild(moreControls);
+        this.container.appendChild(roomControls);
 
         this.about = document.createElement("span");
         this.about.className = 'button';
         this.about.innerHTML = 'About';
-        moreControls.appendChild(this.about);
+        roomControls.appendChild(this.about);
 
         this.save = document.createElement("span"); //getElementById('save');
         this.save.className = 'button';
         this.save.innerHTML = 'Save';
-        moreControls.appendChild(this.save);
+        roomControls.appendChild(this.save);
 
         this.clear = document.createElement("span");
         this.clear.className = 'button';
         this.clear.innerHTML = 'Clear';
-        moreControls.appendChild(this.clear);
+        roomControls.appendChild(this.clear);
 
-        this.rooms = document.createElement("span");
-        this.rooms.className = 'button';
-        this.rooms.innerHTML = 'Rooms';
-        moreControls.appendChild(this.rooms);
+        this.join = document.createElement("span");
+        this.join.className = 'button';
+        this.join.innerHTML = 'Join';
+        roomControls.appendChild(this.join);
 
 
         var zoomControls = document.createElement("span");
@@ -103,6 +104,10 @@ Menu.prototype = {
         this.pan.innerHTML = 'Pan';
         this.container.appendChild(this.pan);
 
+        var separator = document.createElement("span");
+        separator.innerHTML = "|";
+        this.container.appendChild(separator);
+
         this.zoomout = document.createElement("span");
         this.zoomout.className = 'button';
         this.zoomout.setAttribute("id", "zoomout");
@@ -123,11 +128,11 @@ Menu.prototype = {
 
         zoomControls.style.display = 'none';
 
-        this.more = document.createElement("span");
-        this.more.className = 'button';
-        this.more.setAttribute("id", "more");
-        this.more.innerHTML = 'More';
-        this.container.appendChild(this.more);
+        this.rooms = document.createElement("span");
+        this.rooms.className = 'button';
+        this.rooms.setAttribute("id", "rooms");
+        this.rooms.innerHTML = 'Room';
+        this.container.appendChild(this.rooms);
 
     },
 
