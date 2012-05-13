@@ -94,10 +94,6 @@ Menu.prototype = {
         this.erase.innerHTML = 'Erase';
         brushControls.appendChild(this.erase);
 
-        var separator = document.createElement("span");
-        separator.innerHTML = "|";
-        brushControls.appendChild(separator);
-
         this.pan = document.createElement("span");
         this.pan.className = 'button';
         this.pan.setAttribute("id", "pan");
