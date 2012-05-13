@@ -20,6 +20,7 @@ function getID() {
 
 var _strokes = { "#default" : []};
 var _bgColors = { };
+var _users = {};
 
 io.sockets.on('connection', function (socket) {
   var _user_id = getID();
@@ -38,6 +39,8 @@ io.sockets.on('connection', function (socket) {
     if (!_strokes[_room]) {
       _strokes[_room] = [];
     }
+
+    _users[_user_id] = _room;
     socket.join(_room);
     socket.emit('clear');
 
@@ -63,17 +66,20 @@ io.sockets.on('connection', function (socket) {
   });
 
   socket.on('list-rooms', function(callback) {
-    var alrightRooms = [];
-    for (var room in _strokes) { 
-      if (_strokes[room].length > 0) {
-        alrightRooms.push(room);
-      }
+    var populatedRooms = {};
+    for (var user in _users) {
+      populatedRooms[_users[user]] = true;
     }
 
-    callback(alrightRooms);
+    var rooms = Object.keys(populatedRooms);
+
+    callback(rooms.slice(0, 5));
   });
 
   socket.on('disconnect', function() {
+    if (_users[_user_id]) {
+      delete _users[_user_id];
+    }
   });
 
 });

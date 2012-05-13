@@ -26,15 +26,12 @@ Rooms.prototype = {
       container.style.visibility = 'hidden';
 
       socket.emit('list-rooms', function(room_list) {
-        container.innerHTML = '<br />';
-        if (room_list.length == 0) { 
-          containerText = document.createElement("div");
-          containerText.style.margin = '20px 10px';
-          containerText.style.textAlign = 'left';
-
-          containerText.innerHTML = "oh. there are no rooms, currently. draw something!"
-          this.container.appendChild(containerText);
+        if (room_list.length == 0) {
+          container.innerHTML = "oh. there are no active rooms, currently. create one!"
+          return;
         }
+
+        container.innerHTML = 'Click on a room below to join. <br />';
 
         room_list.forEach(function(room) {
           var href = document.createElement("a");
