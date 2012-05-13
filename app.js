@@ -62,7 +62,7 @@ io.sockets.on('connection', function (socket) {
     _strokes[_room] = [];
   });
 
-  socket.on('rooms', function(callback) {
+  socket.on('list-rooms', function(callback) {
     var alrightRooms = [];
     for (var room in _strokes) { 
       if (_strokes[room].length > 0) {

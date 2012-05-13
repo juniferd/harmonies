@@ -25,7 +25,7 @@ Rooms.prototype = {
       var container = this.container;
       container.style.visibility = 'hidden';
 
-      socket.emit('rooms', function(room_list) {
+      socket.emit('list-rooms', function(room_list) {
         container.innerHTML = '<br />';
         if (room_list.length == 0) { 
           containerText = document.createElement("div");
