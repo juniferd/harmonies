@@ -32,18 +32,23 @@ Rooms.prototype = {
         var newRoom = document.createElement('div');
         newRoom.innerHTML = 'new room'; 
         var roomInput = document.createElement('input');
-        newRoom.appendChild(roomInput);
         roomInput.setAttribute('type', 'text');
         roomInput.style.marginLeft = "25px";
 
         roomInput.addEventListener('change', function(event) {
+          console.log(roomInput.value);
           window.location.hash = roomInput.value;
-        });
+        }, false);
+
+
+        newRoom.appendChild(roomInput);
         container.appendChild(newRoom);
 
         // Add the room list.
         if (room_list.length > 0) {
-          container.innerHTML += 'or click on a room below to join <br />';
+          var roomText = document.createElement('div');
+          roomText.innerHTML = 'or click on a room below to join <br />';
+          container.appendChild(roomText);
 
           room_list.forEach(function(room) {
             var href = document.createElement("a");

@@ -239,8 +239,10 @@ function onWindowKeyUp(event) {
     switch (event.keyCode) {
     case 67:
         // c
+        if (colorKeyIsDown) { 
+          cleanPopUps();
+        }
         colorKeyIsDown = false;
-        cleanPopUps();
         break;
 
     case 16:
