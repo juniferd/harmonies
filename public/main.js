@@ -461,10 +461,12 @@ function onMenuPan() {
 }
 
 function onMenuClear() {
-    clearCanvas();
-    socket.emit('clear');
-
+    if (confirm("Are you sure you want to clear the canvas?")) {
+      clearCanvas();
+      socket.emit('clear');
+    }
 }
+
 function onMenuRooms(){
     if (isRoomsOpen == true){
         cleanPopUps();
