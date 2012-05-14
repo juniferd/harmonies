@@ -70,7 +70,7 @@ io.sockets.on('connection', function (socket) {
 
     if (_fgColors[_room]) {
       socket.emit('new-fgcolor', _fgColors[_room]);
-      socket.broadcast.emit('new-fgcolor', _fgColors[_room]);
+      socket.broadcast.to(_room).emit('new-fgcolor', _fgColors[_room]);
     }
 
 
@@ -90,7 +90,7 @@ io.sockets.on('connection', function (socket) {
     _fgColors[_room][_user_id] = data;
 
     socket.emit('new-fgcolor', _fgColors[_room]);
-    socket.broadcast.emit('new-fgcolor', _fgColors[_room]);
+    socket.broadcast.to(_room).emit('new-fgcolor', _fgColors[_room]);
   });
 
   socket.on('clear', function() {
