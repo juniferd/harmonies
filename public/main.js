@@ -21,6 +21,8 @@ var SCREEN_WIDTH = window.innerWidth * 2,
     origY = 0,
     mouseX = 0,
     mouseY = 0,
+    prevX = 0,
+    prevY = 0,
     container, foregroundColorSelector, backgroundColorSelector, menu, about, rooms, zoomin, zoomout, rooms, canvas, flattenCanvas, context, isFgColorSelectorVisible = false,
     isBgColorSelectorVisible = false,
     isAboutVisible = false,
@@ -556,7 +558,10 @@ function inputStart(x, y) {
 
     brush.strokeStart(xScaled, yScaled);
 
-    strokeCoordinates = [xScaled, yScaled];
+    strokeCoordinates = [[xScaled, yScaled]];
+
+    prevX = xScaled;
+    prevY = yScaled;
 }
 
 function inputContinue(x, y) {
@@ -586,9 +591,13 @@ function inputContinue(x, y) {
 
     brush.stroke(xScaled, yScaled);
 
+
     if (strokeCoordinates) {
-      strokeCoordinates.push([xScaled, yScaled]);
+      strokeCoordinates.push([xScaled - prevX, yScaled - prevY]);
     }
+
+    prevX = xScaled;
+    prevY = yScaled;
 }
 
 function inputEnd() {

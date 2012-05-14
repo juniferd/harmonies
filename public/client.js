@@ -17,12 +17,17 @@ function nextStroke() {
     }
 }
 
+
 function traceStroke(newBrush, coords, color, erase) {
     midStroke = true;
-    newBrush.strokeStart(coords.shift());
 
-    var i = 0,
-        queue_size = 20;
+    var startCoords = coords.shift();
+        i = 0,
+        queue_size = 20,
+        curX = startCoords[0],
+        curY = startCoords[1];
+
+    newBrush.strokeStart(startCoords);
 
     var origColor = COLOR;
     var doWork = function() {
@@ -35,7 +40,9 @@ function traceStroke(newBrush, coords, color, erase) {
 
             COLOR = color || COLOR;
             for (var n = 0; i < coords.length && n < queue_size; i++, n++) {
-                newBrush.stroke(coords[i][0], coords[i][1]);
+                curX += coords[i][0];
+                curY += coords[i][1];
+                newBrush.stroke(curX, curY);
             }
 
             context.globalCompositeOperation = lastCompositeOperation;
