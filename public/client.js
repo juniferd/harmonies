@@ -95,7 +95,7 @@ function ChangeBrush(user_id, brushName, forceNew) {
 }
 
 socket.on('stroke', function(data) {
-    var newBrush = ChangeBrush(data.user_id, data.brush, data.new);
+    var newBrush = ChangeBrush(data.user_id, data.brush, data.lift);
 
     data.brush = newBrush;
     pendingStrokes.push(data);

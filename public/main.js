@@ -1,4 +1,4 @@
-const REV = 6, BRUSHES = ["sketchy", "shaded", "chrome", "fur", "longfur", "web", "", "simple", "squares", "ribbon", "", "circles", "grid"], USER_AGENT = navigator.userAgent.toLowerCase();
+var REV = 6, BRUSHES = ["sketchy", "shaded", "chrome", "fur", "longfur", "web", "", "simple", "squares", "ribbon", "", "circles", "grid"], USER_AGENT = navigator.userAgent.toLowerCase();
 
 var SCREEN_WIDTH = window.innerWidth * 2,
     SCREEN_HEIGHT = window.innerHeight * 2,
@@ -673,7 +673,7 @@ function inputEnd() {
         }
 
         if (newStroke) {
-          stroke_data.new = 1;
+          stroke_data.lift = 1;
         }
 
         if (isBackground) {
