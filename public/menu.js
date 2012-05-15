@@ -95,6 +95,18 @@ Menu.prototype = {
         this.erase.innerHTML = 'Erase';
         brushControls.appendChild(this.erase);
 
+        this.layerbg = document.createElement("span");
+        this.layerbg.className = 'button';
+        this.layerbg.setAttribute("id", "bg-layer");
+        this.layerbg.innerHTML = "BG";
+        brushControls.appendChild(this.layerbg);
+
+        var separator = document.createElement("span");
+        separator.innerHTML = "|";
+        brushControls.appendChild(separator);
+
+
+
         this.pan = document.createElement("span");
         this.pan.className = 'button';
         this.pan.setAttribute("id", "pan");

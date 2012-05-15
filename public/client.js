@@ -13,12 +13,12 @@ var midStroke = false;
 function nextStroke() {
     if (!midStroke && pendingStrokes.length > 0) {
         var data = pendingStrokes.shift();
-        traceStroke(data.brush, data.coords, data.color, data.erase);
+        traceStroke(data.brush, data.coords, data.color, data.erase, data.bg);
     }
 }
 
 
-function traceStroke(newBrush, coords, color, erase) {
+function traceStroke(newBrush, coords, color, erase, bg) {
     midStroke = true;
 
     var startCoords = coords.shift();
@@ -29,9 +29,12 @@ function traceStroke(newBrush, coords, color, erase) {
 
     newBrush.strokeStart(startCoords);
 
-    var origColor = COLOR;
+    var lastColor = COLOR;
+    var lastContext = context;
+    var lastCompositeOperation = context.globalCompositeOperation;
+
     var doWork = function() {
-            var lastCompositeOperation = context.globalCompositeOperation;
+
             if (erase) {
                 context.globalCompositeOperation = "destination-out";
             } else {
@@ -39,6 +42,14 @@ function traceStroke(newBrush, coords, color, erase) {
             }
 
             COLOR = color || COLOR;
+            if (bg) {
+              context = bgcanvas.getContext("2d");
+            } else {
+              context = fgcanvas.getContext("2d");
+            }
+
+            newBrush.context = context;
+
             for (var n = 0; i < coords.length && n < queue_size; i++, n++) {
                 curX += coords[i][0];
                 curY += coords[i][1];
@@ -46,8 +57,9 @@ function traceStroke(newBrush, coords, color, erase) {
             }
 
             context.globalCompositeOperation = lastCompositeOperation;
+            context = lastContext;
 
-            COLOR = origColor;
+            COLOR = lastColor;
 
             if (i < coords.length) {
                 setTimeout(doWork, 20);
@@ -57,7 +69,7 @@ function traceStroke(newBrush, coords, color, erase) {
                 nextStroke();
             }
 
-            COLOR = origColor;
+            COLOR = lastColor;
 
         };
 
@@ -83,17 +95,10 @@ function ChangeBrush(user_id, brushName, forceNew) {
 }
 
 socket.on('stroke', function(data) {
-    var origColor = COLOR;
     var newBrush = ChangeBrush(data.user_id, data.brush, data.new);
 
-    var color = data.color || COLOR;
-
-    pendingStrokes.push({
-        brush: newBrush,
-        coords: data.coords,
-        color: color,
-        erase: data.erase
-    });
+    data.brush = newBrush;
+    pendingStrokes.push(data);
     nextStroke();
 });
 

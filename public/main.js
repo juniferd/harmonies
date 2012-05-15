@@ -23,7 +23,22 @@ var SCREEN_WIDTH = window.innerWidth * 2,
     mouseY = 0,
     prevX = 0,
     prevY = 0,
-    container, foregroundColorSelector, backgroundColorSelector, menu, about, rooms, zoomin, zoomout, rooms, canvas, flattenCanvas, context, isFgColorSelectorVisible = false,
+    container,
+    foregroundColorSelector,
+    backgroundColorSelector,
+    menu,
+    about,
+    rooms,
+    zoomin,
+    zoomout,
+    rooms,
+    canvas,
+    fgcanvas,
+    bgcanvas,
+    flattenCanvas,
+    context,
+    isBackground = false,
+    isFgColorSelectorVisible = false,
     isBgColorSelectorVisible = false,
     isAboutVisible = false,
     isRoomsVisible = false,
@@ -63,11 +78,18 @@ function init() {
      * wacom = document.embeds["wacom-plugin"];
      */
 
-    canvas = document.createElement("canvas");
+    fgcanvas = canvas = document.createElement("canvas");
     canvas.width = CANVAS_WIDTH;
     canvas.height = CANVAS_HEIGHT;
     canvas.setAttribute("id", "drawing");
     canvas.style.cursor = 'crosshair';
+
+    bgcanvas = document.createElement("canvas");
+    bgcanvas.width = CANVAS_WIDTH;
+    bgcanvas.height = CANVAS_HEIGHT;
+    bgcanvas.setAttribute("id", "drawing-bg");
+
+    container.appendChild(bgcanvas);
     container.appendChild(canvas);
 
     context = canvas.getContext("2d");
@@ -99,6 +121,7 @@ function init() {
     menu.about.addEventListener('click', onMenuAbout, false);
     menu.join.addEventListener('click', onMenuJoin, false);
     menu.rooms.addEventListener('click', onMenuRooms, false);
+    menu.layerbg.addEventListener('click', onMenuBG, false);
     menu.container.addEventListener('mouseover', onMenuMouseOver, false);
     menu.container.addEventListener('mouseout', onMenuMouseOut, false);
     container.appendChild(menu.container);
@@ -187,6 +210,10 @@ function onWindowKeyDown(event) {
     if (modalDialogOpen) return;
 
     switch (event.keyCode) {
+    case 66:
+        // b
+        onMenuBG();
+        break;
     case 67:
         // c
         colorKeyIsDown = true;
@@ -241,7 +268,7 @@ function onWindowKeyUp(event) {
     switch (event.keyCode) {
     case 67:
         // c
-        if (colorKeyIsDown) { 
+        if (colorKeyIsDown) {
           cleanPopUps();
         }
         colorKeyIsDown = false;
@@ -456,7 +483,7 @@ function onMenuPan() {
       panModeOn = true;
       document.getElementById("pan").className = "button selected";
       setCanvasCursor();
-    } 
+    }
 
     displayControls();
 
@@ -492,18 +519,45 @@ function PanCanvas() {
     canvas.style.oTransform = "translate(" + x + "px," + y + "px)";
 
     canvas.style.zoom = ZOOM;
+
+    bgcanvas.style.transform = "translate(" + x + "px," + y + "px)";
+    bgcanvas.style.msTransform = "translate(" + x + "px," + y + "px)";
+    bgcanvas.style.webkitTransform = "translate(" + x + "px," + y + "px)";
+    bgcanvas.style.MozTransform = "translate(" + x + "px," + y + "px) scale(" + ZOOM +")";
+    bgcanvas.style.oTransform = "translate(" + x + "px," + y + "px)";
+
+    bgcanvas.style.zoom = ZOOM;
     origX = x;
     origY = y;
 }
 
 function clearCanvas() {
 
-    context.clearRect(0, 0, canvas.width, canvas.height);
-
-    saveToLocalStorage();
+    bgcanvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+    fgcanvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
 
     changeBrush(menu.selector.selectedIndex);
+}
 
+function onMenuBG() {
+  if (isBackground) {
+    isBackground = false;
+
+    context = fgcanvas.getContext("2d");
+    brush.context = context;
+    document.getElementById("bg-layer").className = "button";
+    bgcanvas.style.opacity = "0.5";
+    fgcanvas.style.opacity = "1";
+    return;
+  }
+
+  isBackground = true;
+  context = bgcanvas.getContext("2d");
+  brush.context = context;
+  document.getElementById("bg-layer").className = "button selected";
+
+  fgcanvas.style.opacity = "0.5";
+  bgcanvas.style.opacity = "1";
 }
 
 function onMenuAbout() {
@@ -608,13 +662,27 @@ function inputEnd() {
 
     brush.strokeEnd();
     if (strokeCoordinates && strokeCoordinates.length >= 1) {
-        socket.emit('stroke', {
+        var stroke_data = {
             brush: brushName,
             coords: strokeCoordinates,
             color: COLOR,
-            erase: eraseModeOn,
-            new: newStroke
-        });
+        };
+
+        if (eraseModeOn) {
+          stroke_data.erase = 1;
+        }
+
+        if (newStroke) {
+          stroke_data.new = 1;
+        }
+
+        if (isBackground) {
+          stroke_data.bg = 1;
+        }
+
+        socket.emit('stroke', stroke_data);
+
+
     }
 
     newStroke = false;
@@ -689,7 +757,8 @@ function flatten() {
 
     context.fillStyle = 'rgb(' + BACKGROUND_COLOR[0] + ', ' + BACKGROUND_COLOR[1] + ', ' + BACKGROUND_COLOR[2] + ')';
     context.fillRect(0, 0, canvas.width, canvas.height);
-    context.drawImage(canvas, 0, 0);
+    context.drawImage(bgcanvas, 0, 0);
+    context.drawImage(fgcanvas, 0, 0);
 }
 
 function cleanPopUps() {
@@ -725,7 +794,7 @@ function cleanPopUps() {
 }
 
 function displayControls() {
-    if (isRoomsOpen) { 
+    if (isRoomsOpen) {
       document.getElementById('pan').style.display = 'none';
       document.getElementById('roomControls').style.display = 'inline-block';
       document.getElementById('zoomControls').style.display = 'none';
