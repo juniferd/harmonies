@@ -162,6 +162,7 @@ function init() {
     canvas.addEventListener('touchend', touchHandlerDummy, false);
 
     onWindowResize(null);
+    displayControls();
 }
 
 function touchHandlerDummy() {
