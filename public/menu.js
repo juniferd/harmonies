@@ -28,7 +28,7 @@ Menu.prototype = {
         this.container.className = 'gui';
         this.container.setAttribute("id", "main-menu");
 
-        var roomControls = document.createElement("div");
+        var roomControls = document.createElement("span");
         roomControls.setAttribute("id", "roomControls");
         roomControls.style.display = "none";
 
@@ -64,6 +64,13 @@ Menu.prototype = {
         this.container.appendChild(zoomControls);
         this.container.appendChild(brushControls);
 
+        this.layerbg = document.createElement("span");
+        this.layerbg.className = 'button';
+        this.layerbg.setAttribute("id", "bg-layer");
+        this.layerbg.innerHTML = "BG";
+        brushControls.appendChild(this.layerbg);
+
+
         this.foregroundColor = document.createElement("canvas");
         this.foregroundColor.className = 'color-button';
         this.foregroundColor.width = color_width;
@@ -94,12 +101,6 @@ Menu.prototype = {
         this.erase.setAttribute("id", "erase");
         this.erase.innerHTML = 'Erase';
         brushControls.appendChild(this.erase);
-
-        this.layerbg = document.createElement("span");
-        this.layerbg.className = 'button';
-        this.layerbg.setAttribute("id", "bg-layer");
-        this.layerbg.innerHTML = "BG";
-        brushControls.appendChild(this.layerbg);
 
         var separator = document.createElement("span");
         separator.innerHTML = "|";

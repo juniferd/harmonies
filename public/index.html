@@ -74,13 +74,17 @@
         left: 0;
       }
 
+      #bg-layer {
+        margin-right: 10px;
+      }
+
       .gui
       {
         position: absolute;
         width: 320px;
         top: 0;
         background-color: #fff;
-        padding: 5px 0px;
+        padding: 0px;
         text-align: center;
         text-transform: uppercase;
         line-height: 18px;
@@ -101,10 +105,16 @@
         padding: 2px;
         cursor: pointer;
       }
+
       .color-button{
-        margin: 3px 3px -3px;
+        margin-right: 5px;
+        top: 5px;
+        position: relative;
+        width: 20px;
+        height: 20px;
         cursor: pointer;
       }
+
       .key
       {
         padding: 0px 8px;
@@ -115,16 +125,16 @@
       #roomControls,
       #brushControls,
       #zoomControls {
-        width: 220px;
-        line-height: 30px;
-        height: 30px;
+        width: 240px;
+        line-height: 40px;
+        height: 40px;
         text-align: left;
         display: inline-block;
       }
 
       #roomControls {
         margin-left: 5px;
-        width: 244px;
+        width: 263px;
       }
 
       #pan {
@@ -153,6 +163,8 @@
 
       .user-swatch {
         height: 5px;
+        position: relative;
+        top: -5px;
         border-left: 3px solid #fff;
         border-right: 3px solid #fff;
         margin-left: -6px;
