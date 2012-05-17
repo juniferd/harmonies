@@ -3,7 +3,7 @@ var room = window.location.hash || "#default";
 var socket = io.connect('/');
 
 socket.emit('join', {
-    room: room
+    room: room.toLowerCase()
 });
 
 var userBrushes = {};
