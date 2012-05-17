@@ -131,9 +131,12 @@ socket.on('clear', function() {
     clearCanvas();
 });
 
-// Constantly query the location hash for changes
-setInterval(function() {
-    if (window.location.hash && window.location.hash != room) {
-        window.location.reload();
-    }
-}, 50);
+window.onload = function() {
+  // Constantly query the location hash for changes
+  var hashTimer = setInterval(function() {
+      if (window.location.hash && window.location.hash != room) {
+          window.location.reload();
+          clearTimeout(hashTimer);
+      }
+  }, 50);
+}
