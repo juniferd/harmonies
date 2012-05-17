@@ -29,49 +29,47 @@ function traceStroke(newBrush, coords, color, erase, bg) {
 
     newBrush.strokeStart(startCoords);
 
-    var lastColor = COLOR;
-    var lastContext = context;
-    var lastCompositeOperation = context.globalCompositeOperation;
-
     var doWork = function() {
+        var lastColor = COLOR;
+        var lastContext = context;
+        if (bg) {
+          context = bgcanvas.getContext("2d");
+        } else {
+          context = fgcanvas.getContext("2d");
+        }
 
-            if (erase) {
-                context.globalCompositeOperation = "destination-out";
-            } else {
-                context.globalCompositeOperation = "source-over";
-            }
+        var lastCompositeOperation = context.globalCompositeOperation;
+        if (erase) {
+            context.globalCompositeOperation = "destination-out";
+        } else {
+            context.globalCompositeOperation = "source-over";
+        }
 
-            COLOR = color || COLOR;
-            if (bg) {
-              context = bgcanvas.getContext("2d");
-            } else {
-              context = fgcanvas.getContext("2d");
-            }
+        COLOR = color || COLOR;
 
-            newBrush.context = context;
+        newBrush.context = context;
 
-            for (var n = 0; i < coords.length && n < queue_size; i++, n++) {
-                curX += coords[i][0];
-                curY += coords[i][1];
-                newBrush.stroke(curX, curY);
-            }
+        for (var n = 0; i < coords.length && n < queue_size; i++, n++) {
+            curX += coords[i][0];
+            curY += coords[i][1];
+            newBrush.stroke(curX, curY);
+        }
 
-            context.globalCompositeOperation = lastCompositeOperation;
-            context = lastContext;
+        context.globalCompositeOperation = lastCompositeOperation;
+        context = lastContext;
+        COLOR = lastColor;
 
-            COLOR = lastColor;
+        if (i < coords.length) {
+            setTimeout(doWork, 20);
+        } else {
+            newBrush.strokeEnd();
+            midStroke = false;
+            nextStroke();
+        }
 
-            if (i < coords.length) {
-                setTimeout(doWork, 20);
-            } else {
-                newBrush.strokeEnd();
-                midStroke = false;
-                nextStroke();
-            }
+        COLOR = lastColor;
 
-            COLOR = lastColor;
-
-        };
+    };
 
     doWork();
 }

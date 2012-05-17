@@ -47,7 +47,7 @@ var SCREEN_WIDTH = window.innerWidth * 2,
     colorKeyIsDown = false,
     pickerKeyIsDown = false,
     panModeOn = false,
-    eraseModeOn = false,
+    isEraseModeOn = false,
     isRoomsOpen = false,
     newStroke = false,
     lastCompositeOperation,
@@ -370,7 +370,7 @@ function onBackgroundColorSelectorChange(event) {
 function setCanvasCursor() {
   if (panModeOn) {
     canvas.style.cursor = 'move';
-  } else if (eraseModeOn) {
+  } else if (isEraseModeOn) {
     canvas.style.cursor = 'url(/images/eraser.png) 6 8, hand';
   } else {
     canvas.style.cursor = 'crosshair';
@@ -419,7 +419,7 @@ function onMenuSelectorChange() {
 
 
     changeBrush(menu.selector.selectedIndex);
-    if (eraseModeOn) {
+    if (isEraseModeOn) {
       context.globalCompositeOperation = "destination-out";
     }
 
@@ -440,8 +440,8 @@ function onMenuSave() {
 }
 
 function onMenuErase() {
-    if (eraseModeOn == true) {
-        eraseModeOn = false;
+    if (isEraseModeOn == true) {
+        isEraseModeOn = false;
 
         context.globalCompositeOperation = lastCompositeOperation;
         COLOR = lastColor;
@@ -452,7 +452,7 @@ function onMenuErase() {
     }
 
     //turn erase mode on
-    eraseModeOn = true;
+    isEraseModeOn = true;
     lastCompositeOperation = context.globalCompositeOperation;
 
     context.globalCompositeOperation = "destination-out";
@@ -548,16 +548,17 @@ function onMenuBG() {
     document.getElementById("bg-layer").className = "button";
     bgcanvas.style.opacity = "0.5";
     fgcanvas.style.opacity = "1";
-    return;
+  } else {
+    isBackground = true;
+    context = bgcanvas.getContext("2d");
+    brush.context = context;
+    document.getElementById("bg-layer").className = "button selected";
+
+    fgcanvas.style.opacity = "0.5";
+    bgcanvas.style.opacity = "1";
   }
 
-  isBackground = true;
-  context = bgcanvas.getContext("2d");
-  brush.context = context;
-  document.getElementById("bg-layer").className = "button selected";
-
-  fgcanvas.style.opacity = "0.5";
-  bgcanvas.style.opacity = "1";
+  onMenuSelectorChange();
 }
 
 function onMenuAbout() {
@@ -601,7 +602,7 @@ function inputStart(x, y) {
         return;
     }
 
-    if (eraseModeOn) {
+    if (isEraseModeOn) {
       BRUSH_PRESSURE = 1;
     } else {
       BRUSH_PRESSURE = wacom && wacom.isWacom ? wacom.pressure : 1;
@@ -634,7 +635,7 @@ function inputContinue(x, y) {
     }
 
 
-    if (eraseModeOn) {
+    if (isEraseModeOn) {
       BRUSH_PRESSURE = 1;
     } else {
       BRUSH_PRESSURE = wacom && wacom.isWacom ? wacom.pressure : 1;
@@ -668,7 +669,7 @@ function inputEnd() {
             color: COLOR,
         };
 
-        if (eraseModeOn) {
+        if (isEraseModeOn) {
           stroke_data.erase = 1;
         }
 
