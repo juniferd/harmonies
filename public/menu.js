@@ -1,25 +1,8 @@
-$(function(){
-    var testObj = {
-      about: "test",
-      save: "test2"
-    };
-    var tester2 = {
-      about: {id:'2', foo:'bar'},
-      save: 'test4'
-    };
-    $("<p>wee</p>").appendTo("body");
-    $("<div style='margin-top:10px;left:10px;'>"+testObj['about']+"</div>").appendTo("body");
-    $("<div style='margin-top:10px;left:10px;'>"+tester2['about']['foo']+"</div>").appendTo("body");
-});
 $(window).resize(function(){
   var cw = document.documentElement.clientWidth;
   checkIfMobile(cw);
 });
-$(document).ready(function(){
-  
-  var cw = document.documentElement.clientWidth;
-  checkIfMobile(cw);
-});
+
 function checkIfMobile(cw){
   var mobile = (cw > 960) ? false : true;
   if (!mobile){
@@ -30,8 +13,9 @@ function checkIfMobile(cw){
 }
 
 function Menu() {
+    var cw = document.documentElement.clientWidth;
     this.init();
-    
+    checkIfMobile(cw);
 }
 
 Menu.prototype = {
@@ -60,25 +44,25 @@ Menu.prototype = {
                 roomControls: {
                     type: 'span',
                     id: 'roomControls',
-                    class: null,
+                    class: '',
                     parent: '#main-menu',
-                    text: null,
+                    text: '',
                     inmenu: false
                 },
                 zoomControls: {
                     type:'span',
                     id: 'zoomControls',
-                    class: null,
+                    class: '',
                     parent: '#main-menu',
-                    text: null,
+                    text: '',
                     inmenu: false
                 },
                 brushControls: {
                     type:'span',
                     id: 'brushControls',
-                    class: null,
+                    class: '',
                     parent: '#main-menu',
-                    text: null,
+                    text: '',
                     inmenu: false
                 },
                 about: {
@@ -127,7 +111,7 @@ Menu.prototype = {
                     id: 'fgcolor',
                     class: 'color-button',
                     parent: '#brushControls',
-                    text: null,
+                    text: '',
                     inmenu: true
                 },
                 backgroundColor: {
@@ -135,13 +119,13 @@ Menu.prototype = {
                     id:'bgcolor',
                     class:'color-button',
                     parent: '#brushControls',
-                    text: null,
+                    text: '',
                     inmenu: true
                 },
                 selector: {
                     type: 'select',
                     id:'selector',
-                    class: null,
+                    class: '',
                     parent:'#brushControls',
                     text:'',
                     inmenu: true
@@ -172,8 +156,8 @@ Menu.prototype = {
                 },
                 zoomLabel: {
                     type: 'span',
-                    id: null,
-                    class: null,
+                    id: '',
+                    class: '',
                     parent: '#zoomControls',
                     text: 'Zoom',
                     inmenu: false
@@ -197,9 +181,9 @@ Menu.prototype = {
                 users: {
                     type: 'div',
                     id: 'user_list',
-                    class: null,
+                    class: '',
                     parent: '#main-menu',
-                    text: null,
+                    text: '',
                     inmenu: true
                 }
             };
