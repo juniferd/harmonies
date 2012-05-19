@@ -1,4 +1,4 @@
-$(document).ready(function(){
+$(window).resize(function(){
     var cw = document.documentElement.clientWidth;
     checkIfMobile(cw);
 });
@@ -7,7 +7,7 @@ function checkIfMobile(cw){
     if (!mobile){
         return;
     }
-    $('<div>what</div>').appendTo('body');
+    return 'true';
     
 }
 
@@ -184,6 +184,7 @@ Menu.prototype = {
                     inmenu: true
                 }
             };
+        var cw = document.documentElement.clientWidth;
         
         //create desktop menu gui
         $('<div/>').addClass('gui')
@@ -224,6 +225,21 @@ Menu.prototype = {
         $('#roomControls').hide();
         //hide zoomControls
         $('#zoomControls').hide();
+        if (checkIfMobile(cw)){
+            //create mobile menu gui
+            $('<div id="menu-toggle"></div>').appendTo($firstDiv);
+            $('#main-menu').addClass('mobile').hide();
+            $('#menu-toggle').click(function(){
+                if ($('#main-menu').is(':visible')){
+                    $(this).removeClass('selected');
+                    $('#main-menu').fadeOut();
+                    return;
+                }
+                $(this).addClass('selected');
+                $('#main-menu').fadeIn();
+            });
+            return;
+        }
     },
         
     setForegroundColor: function(color) {
