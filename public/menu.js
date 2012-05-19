@@ -1,21 +1,18 @@
-$(window).resize(function(){
-  var cw = document.documentElement.clientWidth;
-  checkIfMobile(cw);
+$(document).ready(function(){
+    var cw = document.documentElement.clientWidth;
+    checkIfMobile(cw);
 });
-
 function checkIfMobile(cw){
-  var mobile = (cw > 960) ? false : true;
-  if (!mobile){
-    return;
-  }
-  $('<div>what</div>').appendTo('body');
+    var mobile = (cw > 960) ? false : true;
+    if (!mobile){
+        return;
+    }
+    $('<div>what</div>').appendTo('body');
     
 }
 
 function Menu() {
-    var cw = document.documentElement.clientWidth;
     this.init();
-    checkIfMobile(cw);
 }
 
 Menu.prototype = {
