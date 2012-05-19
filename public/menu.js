@@ -1,5 +1,27 @@
+
+$(window).resize(function(){
+    var cw = document.documentElement.clientWidth,
+        ch = document.documentElement.clientHeight;
+    checkIfMobile(cw);
+});
+$(document).ready(function(){
+    var cw = document.documentElement.clientWidth,
+        ch = document.documentElement.clientHeight;
+    checkIfMobile(cw);
+});
+function checkIfMobile(cw){
+    var mobile = (cw > 960) ? false : true;
+    if (!mobile){
+        return;
+    }
+    $('<div>what</div>').appendTo('#main-menu');
+    
+}
+
 function Menu() {
     this.init();
+    
+    
 }
 
 Menu.prototype = {
@@ -19,137 +41,202 @@ Menu.prototype = {
     zoomin: null,
     zoomout: null,
     users: null,
+    layerbg: null,
 
+    
     init: function() {
-        var option, space, separator, color_width = 15,
-            color_height = 15;
+        var $firstDiv = $('body').children('div').eq(0);
+        var color_width=15,
+            color_height=15,
 
-        this.container = document.createElement("div");
-        this.container.className = 'gui';
-        this.container.setAttribute("id", "main-menu");
-
-        var roomControls = document.createElement("span");
-        roomControls.setAttribute("id", "roomControls");
-        roomControls.style.display = "none";
-
-        this.container.appendChild(roomControls);
-
-        this.about = document.createElement("span");
-        this.about.className = 'button';
-        this.about.innerHTML = 'About';
-        roomControls.appendChild(this.about);
-
-        this.save = document.createElement("span"); //getElementById('save');
-        this.save.className = 'button';
-        this.save.innerHTML = 'Save';
-        roomControls.appendChild(this.save);
-
-        this.clear = document.createElement("span");
-        this.clear.className = 'button';
-        this.clear.innerHTML = 'Clear';
-        roomControls.appendChild(this.clear);
-
-        this.join = document.createElement("span");
-        this.join.className = 'button';
-        this.join.innerHTML = 'Join';
-        roomControls.appendChild(this.join);
-
-
-        var zoomControls = document.createElement("span");
-        zoomControls.setAttribute("id", "zoomControls");
-
-        var brushControls = document.createElement("span");
-        brushControls.setAttribute("id", "brushControls");
-
-        this.container.appendChild(zoomControls);
-        this.container.appendChild(brushControls);
-
-        this.layerbg = document.createElement("span");
-        this.layerbg.className = 'button';
-        this.layerbg.setAttribute("id", "bg-layer");
-        this.layerbg.innerHTML = "BG";
-        brushControls.appendChild(this.layerbg);
-
-
-        this.foregroundColor = document.createElement("canvas");
-        this.foregroundColor.className = 'color-button';
-        this.foregroundColor.width = color_width;
-        this.foregroundColor.height = color_height;
-        brushControls.appendChild(this.foregroundColor);
-
-        this.setForegroundColor(COLOR);
-
-        this.backgroundColor = document.createElement("canvas");
-        this.backgroundColor.className = 'color-button';
-        this.backgroundColor.width = color_width;
-        this.backgroundColor.height = color_height;
-        brushControls.appendChild(this.backgroundColor);
-
-        this.setBackgroundColor(BACKGROUND_COLOR);
-
-        this.selector = document.createElement("select");
-        for (i = 0; i < BRUSHES.length; i++) {
-            option = document.createElement("option");
-            option.id = i;
-            option.innerHTML = BRUSHES[i].toUpperCase();
-            this.selector.appendChild(option);
+            roomObj = {
+                roomControls: {
+                    type: 'span',
+                    id: 'roomControls',
+                    class: '',
+                    parent: '#main-menu',
+                    text: '',
+                    inmenu: false
+                },
+                zoomControls: {
+                    type:'span',
+                    id: 'zoomControls',
+                    class: '',
+                    parent: '#main-menu',
+                    text: '',
+                    inmenu: false
+                },
+                brushControls: {
+                    type:'span',
+                    id: 'brushControls',
+                    class: '',
+                    parent: '#main-menu',
+                    text: '',
+                    inmenu: false
+                },
+                about: {
+                    type: 'span',
+                    id: 'about',
+                    class: 'button',
+                    parent: '#roomControls',
+                    text: 'About',
+                    inmenu: true
+                },
+                save: {
+                    type: 'span',
+                    id: 'save',
+                    class: 'button',
+                    parent: '#roomControls',
+                    text: 'Save',
+                    inmenu: true
+                },
+                clear: {
+                    type:'span',
+                    id: 'clear',
+                    class: 'button',
+                    parent: '#roomControls',
+                    text: 'Clear',
+                    inmenu: true
+                },
+                join: {
+                    type:'span',
+                    id: 'join',
+                    class: 'button',
+                    parent: '#roomControls',
+                    text: 'Join',
+                    inmenu: true
+                },
+                
+                layerbg: {
+                    type:'span',
+                    id: 'bg-layer',
+                    class: 'button',
+                    parent: '#brushControls',
+                    text: 'BG',
+                    inmenu: true
+                },
+                foregroundColor: {
+                    type:'canvas',
+                    id: 'fgcolor',
+                    class: 'color-button',
+                    parent: '#brushControls',
+                    text: '',
+                    inmenu: true
+                },
+                backgroundColor: {
+                    type:'canvas',
+                    id:'bgcolor',
+                    class:'color-button',
+                    parent: '#brushControls',
+                    text: '',
+                    inmenu: true
+                },
+                selector: {
+                    type: 'select',
+                    id:'selector',
+                    class: '',
+                    parent:'#brushControls',
+                    text:'',
+                    inmenu: true
+                },
+                erase: {
+                    type: 'span',
+                    id: 'erase',
+                    class: 'button',
+                    parent: '#brushControls',
+                    text: 'Erase',
+                    inmenu: true
+                },
+                pan: {
+                    type: 'span',
+                    id: 'pan',
+                    class: 'button',
+                    parent: '#main-menu',
+                    text: 'Pan',
+                    inmenu: true
+                },
+                zoomin: {
+                    type: 'span',
+                    id: 'zoomin',
+                    class: 'button',
+                    parent: '#zoomControls',
+                    text: '+',
+                    inmenu: true
+                },
+                zoomLabel: {
+                    type: 'span',
+                    id: '',
+                    class: '',
+                    parent: '#zoomControls',
+                    text: 'Zoom',
+                    inmenu: false
+                },
+                zoomout: {
+                    type: 'span',
+                    id: 'zoomout',
+                    class: 'button',
+                    parent: '#zoomControls',
+                    text: '-',
+                    inmenu: true
+                },
+                rooms: {
+                    type: 'span',
+                    id: 'rooms',
+                    class: 'button',
+                    parent: '#main-menu',
+                    text: 'Room',
+                    inmenu: true
+                },
+                users: {
+                    type: 'div',
+                    id: 'user_list',
+                    class: '',
+                    parent: '#main-menu',
+                    text: '',
+                    inmenu: true
+                }
+            };
+        
+        //create desktop menu gui
+        $('<div/>').addClass('gui')
+            .attr('id','main-menu')
+            .appendTo($firstDiv);
+        this.container = document.getElementById('main-menu');
+        
+        //add buttons in menu
+        for (var key in roomObj){
+            var keyId = roomObj[key]['id'];
+            $('<'+roomObj[key]['type']+'/>').addClass(roomObj[key]['class'])
+                .attr('id',roomObj[key]['id'])
+                .text(roomObj[key]['text'])
+                .appendTo(roomObj[key]['parent']);
+            if (roomObj[key]['inmenu']){
+                this[key] = document.getElementById(keyId);
+            }
+            
         }
-        brushControls.appendChild(this.selector);
-
-        this.erase = document.createElement("span");
-        this.erase.className = 'button';
-        this.erase.setAttribute("id", "erase");
-        this.erase.innerHTML = 'Erase';
-        brushControls.appendChild(this.erase);
-
-        var separator = document.createElement("span");
-        separator.innerHTML = "|";
-        brushControls.appendChild(separator);
-
-
-
-        this.pan = document.createElement("span");
-        this.pan.className = 'button';
-        this.pan.setAttribute("id", "pan");
-        this.pan.innerHTML = 'Pan';
-        this.container.appendChild(this.pan);
-
-        var separator = document.createElement("span");
-        separator.innerHTML = "|";
-        this.container.appendChild(separator);
-
-        this.zoomout = document.createElement("span");
-        this.zoomout.className = 'button';
-        this.zoomout.setAttribute("id", "zoomout");
-        this.zoomout.innerHTML = '-';
-
-        zoomControls.appendChild(this.zoomout);
-        zoomLabel = document.createElement("span");
-        zoomLabel.innerHTML = " Zoom ";
-        zoomControls.appendChild(zoomLabel);
-
-
-        this.zoomin = document.createElement("span");
-        this.zoomin.className = 'button';
-        this.zoomin.setAttribute("id", "zoomin");
-        this.zoomin.innerHTML = '+';
-        zoomControls.appendChild(this.zoomin);
-
-
-        zoomControls.style.display = 'none';
-
-        this.rooms = document.createElement("span");
-        this.rooms.className = 'button';
-        this.rooms.setAttribute("id", "rooms");
-        this.rooms.innerHTML = 'Room';
-        this.container.appendChild(this.rooms);
-
-        this.users = document.createElement("div");
-        this.users.setAttribute("id", "user_list");
-        this.container.appendChild(this.users);
-
+        
+        //foreground color selector
+        $('#fgcolor').width(color_width).height(color_height);
+        this.setForegroundColor(COLOR);
+        
+        
+        //background color selector
+        $('#bgcolor').width(color_width).height(color_height);
+        this.setBackgroundColor(BACKGROUND_COLOR);
+        
+        //add brushes to brush selector
+        for (i=0; i<BRUSHES.length; i++){
+            $('<option/>').attr('id',i)
+                .text(BRUSHES[i])
+                .appendTo('#selector');
+        }
+        //hide roomControls
+        $('#roomControls').hide();
+        //hide zoomControls
+        $('#zoomControls').hide();
     },
-
+        
     setForegroundColor: function(color) {
         var context = this.foregroundColor.getContext("2d");
         context.fillStyle = 'rgb(' + color[0] + ', ' + color[1] + ', ' + color[2] + ')';
@@ -166,4 +253,7 @@ Menu.prototype = {
         context.fillRect(0, 0, this.backgroundColor.width, 1);
 
     }
+        
+
+    
 }

@@ -109,6 +109,7 @@ function init() {
     container.appendChild(backgroundColorSelector.container);
 
     menu = new Menu();
+   
     menu.foregroundColor.addEventListener('click', onMenuForegroundColor, false);
     menu.backgroundColor.addEventListener('click', onMenuBackgroundColor, false);
     menu.selector.addEventListener('change', onMenuSelectorChange, false);
