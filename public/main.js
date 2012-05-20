@@ -161,9 +161,6 @@ function init() {
     canvas.addEventListener('touchmove', touchHandlerDummy, false);
     canvas.addEventListener('touchend', touchHandlerDummy, false);
 
-    $(document).bind('ontouchmove',function(event){
-        event.preventDefault();
-    });
     displayControls();
     onWindowResize(null);
 }
