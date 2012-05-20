@@ -143,12 +143,12 @@ Menu.prototype = {
                     text: 'Pan',
                     inmenu: true
                 },
-                zoomin: {
+                zoomout: {
                     type: 'span',
-                    id: 'zoomin',
+                    id: 'zoomout',
                     class: 'button',
                     parent: '#zoomControls',
-                    text: '+',
+                    text: '-',
                     inmenu: true
                 },
                 zoomLabel: {
@@ -159,14 +159,15 @@ Menu.prototype = {
                     text: 'Zoom',
                     inmenu: false
                 },
-                zoomout: {
+                zoomin: {
                     type: 'span',
-                    id: 'zoomout',
+                    id: 'zoomin',
                     class: 'button',
                     parent: '#zoomControls',
-                    text: '-',
+                    text: '+',
                     inmenu: true
                 },
+                
                 rooms: {
                     type: 'span',
                     id: 'rooms',
@@ -179,7 +180,7 @@ Menu.prototype = {
                     type: 'div',
                     id: 'user_list',
                     class: '',
-                    parent: '#main-menu',
+                    parent: $firstDiv,
                     text: '',
                     inmenu: true
                 }
@@ -207,12 +208,12 @@ Menu.prototype = {
         }
         
         //foreground color selector
-        $('#fgcolor').width(color_width).height(color_height);
+        //$('#fgcolor').width(color_width).height(color_height);
         this.setForegroundColor(COLOR);
         
         
         //background color selector
-        $('#bgcolor').width(color_width).height(color_height);
+        //$('#bgcolor').width(color_width).height(color_height);
         this.setBackgroundColor(BACKGROUND_COLOR);
         
         //add brushes to brush selector
@@ -227,15 +228,15 @@ Menu.prototype = {
         $('#zoomControls').hide();
         if (checkIfMobile(cw)){
             //create mobile menu gui
-            $('<div id="menu-toggle"></div>').appendTo($firstDiv);
-            $('#main-menu').addClass('mobile').hide();
+            $('<div id="menu-toggle" class="btn-up"></div>').appendTo($firstDiv);
+            $('#main-menu').prependTo($firstDiv).hide();
             $('#menu-toggle').click(function(){
                 if ($('#main-menu').is(':visible')){
-                    $(this).removeClass('selected');
+                    $(this).removeClass('btn-pushed').addClass('btn-up');
                     $('#main-menu').fadeOut();
                     return;
                 }
-                $(this).addClass('selected');
+                $(this).removeClass('btn-up').addClass('btn-pushed');
                 $('#main-menu').fadeIn();
             });
             return;

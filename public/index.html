@@ -74,10 +74,6 @@
         left: 0;
       }
 
-      #bg-layer {
-        margin-right: 10px;
-      }
-
       .gui
       {
         position: absolute;
@@ -86,7 +82,7 @@
         left: 50%;
         margin-left: -160px;
         background-color: #fff;
-        padding: 0px;
+        padding: .25em 0 0;
         text-align: center;
         text-transform: uppercase;
         line-height: 18px;
@@ -95,38 +91,47 @@
       }
       @media screen and (max-width: 960px){
         .gui{
-          position: absolute;
-          width: 90%;
-          top: 15%;
-          left: 50%;
-          margin-left: -45%;
-          font-size: 2em;
+          position: relative;
+          width: 80%;
+          margin: 15% 5%;
+          padding: 2% 5%;
+          float: left;
+          left: 0;
+          font-size: 1.5em;
         }
       }
 
       .selected{
         background: #333;
         color: #fff;
-        padding:2px;
-        margin: -2px 0 0;
+        padding:.5em;
+        margin: -.5em 0 0;
       }
+      
 
       .button
       {
-        margin: 3px 4px;
-        padding: 2px;
+        margin: .25em;
+        padding: .25em;
+        float:left;
         cursor: pointer;
+        font-size: 1em;
       }
 
       .color-button{
-        margin-right: 5px;
-        top: 5px;
+        margin: .5em .25em .25em;
+        float:left;
         position: relative;
-        width: 20px;
-        height: 20px;
+        width: 1.5em;
+        height: 1.5em;
         cursor: pointer;
+        font-size: 1em;
       }
-
+      @media screen and (max-width: 960px){
+        .color-button{
+          margin: .25em;
+        }
+      }
       .key
       {
         padding: 0px 8px;
@@ -137,59 +142,57 @@
       #roomControls,
       #brushControls,
       #zoomControls {
-        width: 240px;
-        line-height: 40px;
-        height: 40px;
-        text-align: left;
-        display: inline-block;
+        float:left;
+        width: 75%;
+        font-size: 1em;
       }
-
-      #roomControls {
-        margin-left: 5px;
-        width: 263px;
+      #zoomControls span{
+        float:left;
+        font-size: 1em;
+        margin: .5em .5em 0;
       }
-
-      #pan {
-        margin: 2px;
-        width: 20px;
+      #rooms{
+        float: right;
       }
-
-      #moreControls {
-        margin-bottom: 5px;
+      select#selector{
+        float:left;
+        font-size: 1em;
+        margin-top:.6em;
       }
 
       #zoomin,
       #zoomout {
-        width: 45px;
-        display: inline-block;
-        padding: 0px;
-        margin: 0px;
+        padding: 0 2.5em;
+        
         text-align: center;
-        line-height: 25px;
-        height: 25px;
         border: 2px solid #ededed;
         font-family: monospace;
         position: relative;
-        top: 3px;
       }
 
       .user-swatch {
         height: 5px;
         position: relative;
-        top: -5px;
-        border-left: 3px solid #fff;
-        border-right: 3px solid #fff;
-        margin-left: -6px;
+        border-right: 3px solid #efefef;
+        border-left: 3px solid #efefef;
+        margin-right: -6px;
       }
 
       #user_list {
-        padding-left: 6px;
-        height: 0px;
         position: relative;
-        top: -42px;
+        width: 98%;
+        margin-left: 1%;
+        margin-top:-6px;
+        z-index:10;
+        background: none;
+      }
+      .user-swatch:first-child{
+        
+      }
+      .user-swatch:last-child{
+        border-right: none;
       }
       #menu-toggle{
-        background-color: #eeeeee;
         width: 2em;
         height: 2em;
         border-radius: 1.1em;
@@ -197,14 +200,38 @@
           -moz-border-radius: 1.1em;
           -o-border-radius: 1.1em;
         border: .1em solid #aaaaaa;
+        position: absolute;
+        margin-top: .25em;
+        left: 50%;
+        margin-left: -1em;
+      }
+      .btn-up{
+        background-color: #eeeeee;
+        background: -moz-linear-gradient(top, #eeeeee, #dddddd);
+          background:-webkit-gradient(linear,left top, left bottom,from(#eeeeee),to(#dddddd));
+          background: -webkit-linear-gradient(top, #eeeeee, #dddddd);
+          background: -o-linear-gradient(top,#eeeeee, #dddddd);
+          background: -ms-linear-gradient(top, #eeeeee, #dddddd);
+          filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#eeeeee', endColorstr='#dddddd');
         box-shadow: 0px 1px 2px rgba(0,0,0,.25);
           -webkit-box-shadow: 0px 1px 2px rgba(0,0,0,.25);
           -moz-box-shadow: 0px 1px 2px rgba(0,0,0,.25);
           -o-box-shadow: 0px 1px 2px rgba(0,0,0,.25);
-        position: absolute;
-        top: .25em;
-        left: 50%;
-        margin-left: -1em;
+      }
+      @media screen and (max-width:960px){
+        .btn-pushed{
+          background: #cccccc;
+          background: -moz-linear-gradient(top, #cccccc, #eeeeee);
+            background:-webkit-gradient(linear,left top, left bottom,from(#cccccc),to(#eeeeee));
+            background: -webkit-linear-gradient(top, #cccccc, #eeeeee);
+            background: -o-linear-gradient(top,#cccccc, #eeeeee);
+            background: -ms-linear-gradient(top, #cccccc, #eeeeee);
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#cccccc', endColorstr='#eeeeee');
+          box-shadow: none;
+            -webkit-box-shadow: none;
+            -moz-box-shadow: none;
+            -o-box-shadow: none;
+        }
       }
     </style>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
