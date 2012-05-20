@@ -135,11 +135,19 @@ Menu.prototype = {
                     text: 'Erase',
                     inmenu: true
                 },
+                menuRight:{
+                    type:'span',
+                    id: 'menu-right',
+                    class: '',
+                    parent: '#main-menu',
+                    text: '',
+                    inmenu: false
+                },
                 pan: {
                     type: 'span',
                     id: 'pan',
                     class: 'button',
-                    parent: '#main-menu',
+                    parent: '#menu-right',
                     text: 'Pan',
                     inmenu: true
                 },
@@ -172,7 +180,7 @@ Menu.prototype = {
                     type: 'span',
                     id: 'rooms',
                     class: 'button',
-                    parent: '#main-menu',
+                    parent: '#menu-right',
                     text: 'Room',
                     inmenu: true
                 },

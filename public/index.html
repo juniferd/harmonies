@@ -6,7 +6,7 @@
     <meta name="description" content="Procedural Drawing Tool"/>
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-touch-fullscreen" content="yes" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
     <style type="text/css">
       *
       {
@@ -103,6 +103,10 @@
       @media screen and (max-width: 960px){
         #main-menu{
           opacity:0;
+          box-shadow: 0px 0px 10px rgba(0,0,0,.25);
+            -webkit-box-shadow: 0px 0px 10px rgba(0,0,0,.25);
+            -moz-box-shadow: 0px 0px 10px rgba(0,0,0,.25);
+            -o-box-shadow: 0px 0px 10px rgba(0,0,0,.25);
         }
       }
       .selected{
@@ -155,8 +159,14 @@
         font-size: 1em;
         margin: .5em .5em 0;
       }
+      #menu-right{
+        float:left;
+        position:relative;
+        width:25%;
+        font-size: 1em;
+      }
       #rooms{
-        float: right;
+        float:right;
       }
       select#selector{
         float:left;
@@ -205,7 +215,7 @@
           -o-border-radius: 1.1em;
         border: .1em solid #aaaaaa;
         position: absolute;
-        margin-top: .25em;
+        margin-top: .5em;
         left: 50%;
         margin-left: -1em;
       }
