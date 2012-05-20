@@ -230,14 +230,20 @@ Menu.prototype = {
             //create mobile menu gui
             $('<div id="menu-toggle" class="btn-up"></div>').appendTo($firstDiv);
             $('#main-menu').prependTo($firstDiv).hide();
-            $('#menu-toggle').click(function(){
-                if ($('#main-menu').is(':visible')){
-                    $(this).removeClass('btn-pushed').addClass('btn-up');
-                    $('#main-menu').fadeOut();
+            $('#menu-toggle').on('click', function(){
+                if ($('#menu-toggle').hasClass('btn-pushed')){
+                    $('#menu-toggle').removeClass('btn-pushed').addClass('btn-up');
+                    $('#main-menu').animate({
+                        opacity: 0
+                    },200).delay(10).hide();
+                    
                     return;
                 }
-                $(this).removeClass('btn-up').addClass('btn-pushed');
-                $('#main-menu').fadeIn();
+                
+                $('#menu-toggle').removeClass('btn-up').addClass('btn-pushed');
+                $('#main-menu').show().animate({
+                    opacity: 1
+                },200);
             });
             return;
         }

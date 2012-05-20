@@ -165,7 +165,8 @@ function init() {
     onWindowResize(null);
 }
 
-function touchHandlerDummy(e) {
+function touchHandlerDummy() {
+    //need to fix this
     e.preventDefault();
     return false;
 }
