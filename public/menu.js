@@ -250,7 +250,7 @@ Menu.prototype = {
                 
                 $('#menu-toggle').removeClass('btn-up').addClass('btn-pushed');
                 $('#main-menu').show().animate({
-                    opacity: 1
+                    opacity: .9
                 },200);
             });
             return;

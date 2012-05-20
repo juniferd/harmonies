@@ -392,7 +392,8 @@ function onMenuForegroundColor(_, moveToMouse) {
     } else {
       foregroundColorSelector.show();
       foregroundColorSelector.container.style.left = ((SCREEN_WIDTH - foregroundColorSelector.container.offsetWidth) / 2) + 'px';
-        foregroundColorSelector.container.style.top = ((SCREEN_HEIGHT - foregroundColorSelector.container.offsetHeight) / 2) + 'px';
+      foregroundColorSelector.container.style.top = ((SCREEN_HEIGHT - foregroundColorSelector.container.offsetHeight) / 2) + 'px';
+      foregroundColorSelector.container.style.zIndex = '1';
     }
 
     isFgColorSelectorVisible = true;
@@ -409,7 +410,8 @@ function onMenuBackgroundColor(_, moveToMouse) {
     } else {
       backgroundColorSelector.show();
       backgroundColorSelector.container.style.left = ((SCREEN_WIDTH - backgroundColorSelector.container.offsetWidth) / 2) + 'px';
-        backgroundColorSelector.container.style.top = ((SCREEN_HEIGHT - backgroundColorSelector.container.offsetHeight) / 2) + 'px';
+      backgroundColorSelector.container.style.top = ((SCREEN_HEIGHT - backgroundColorSelector.container.offsetHeight) / 2) + 'px';
+      backgroundColorSelector.container.style.zIndex = '1';
     }
 
     isBgColorSelectorVisible = true;
