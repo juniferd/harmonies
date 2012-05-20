@@ -168,8 +168,8 @@ function init() {
     onWindowResize(null);
 }
 
-function touchHandlerDummy() {
-    e.preventDefault();
+function touchHandlerDummy(event) {
+    event.preventDefault();
     return false;
 }
 
