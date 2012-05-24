@@ -22,7 +22,7 @@ function CheckIfMobile(){
 }
 //menu toggle
 $(function(){
-    $('#menu-toggle').live('click', function(){
+    $('#menu-toggle').live('click tap', function(){
         if ($('#menu-toggle').hasClass('btn-pushed')){
             $('#menu-toggle').removeClass('btn-pushed').addClass('btn-up');
             $('#main-menu').animate({
