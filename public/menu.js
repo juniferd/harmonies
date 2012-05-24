@@ -1,15 +1,42 @@
-$(window).resize(function(){
-    var cw = document.documentElement.clientWidth;
-    checkIfMobile(cw);
+$(window).resize(function(){    
+    CheckIfMobile();
 });
-function checkIfMobile(cw){
-    var mobile = (cw > 960) ? false : true;
-    if (!mobile){
-        return;
+function CheckIfMobile(){
+    var cw = window.innerWidth;
+    if (cw <960){
+        //create menu toggle if it doesn't exist already
+        if($('#menu-toggle').length < 1){
+            var $firstDiv = $('body').children('div').eq(0);
+            $('<div id="menu-toggle" class="btn-up"></div>').appendTo($firstDiv);
+            $('#main-menu').prependTo($firstDiv).hide();
+            return;
+        }
+        $('#menu-toggle').removeClass('btn-pushed').addClass('btn-up').show();
+        $('#main-menu').hide();
+        
+    } else {
+        //change to regular menu
+        $('#menu-toggle').removeClass('btn-pushed').addClass('btn-up').hide();
+        $('#main-menu').show().css('opacity',1);
     }
-    return 'true';
-    
 }
+//menu toggle
+$(function(){
+    $('#menu-toggle').on('click', function(){
+        if ($('#menu-toggle').hasClass('btn-pushed')){
+            $('#menu-toggle').removeClass('btn-pushed').addClass('btn-up');
+            $('#main-menu').animate({
+                opacity: 0
+            },200).hide();
+            
+            return;
+        }
+        $('#menu-toggle').removeClass('btn-up').addClass('btn-pushed');
+        $('#main-menu').show().animate({
+            opacity: .9
+        },200);
+    });
+});
 
 function Menu() {
     this.init();
@@ -193,7 +220,7 @@ Menu.prototype = {
                     inmenu: true
                 }
             };
-        var cw = document.documentElement.clientWidth;
+        
         
         //create desktop menu gui
         $('<div/>').addClass('gui')
@@ -234,7 +261,13 @@ Menu.prototype = {
         $('#roomControls').hide();
         //hide zoomControls
         $('#zoomControls').hide();
-        if (checkIfMobile(cw)){
+        
+        
+        //if mobile adjust gui
+        CheckIfMobile();
+        
+        
+        /*if (checkIfMobile()){
             //create mobile menu gui
             $('<div id="menu-toggle" class="btn-up"></div>').appendTo($firstDiv);
             $('#main-menu').prependTo($firstDiv).hide();
@@ -254,7 +287,8 @@ Menu.prototype = {
                 },200);
             });
             return;
-        }
+        }*/
+
     },
         
     setForegroundColor: function(color) {
