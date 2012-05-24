@@ -12,7 +12,7 @@ function CheckIfMobile(){
             return;
         }
         $('#menu-toggle').removeClass('btn-pushed').addClass('btn-up').show();
-        $('#main-menu').css('opacity',0).hide();
+        $('#main-menu').animate({'opacity':0},200).hide();
         
     } else {
         //change to regular menu
