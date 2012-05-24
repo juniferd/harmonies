@@ -12,23 +12,22 @@ function CheckIfMobile(){
             return;
         }
         $('#menu-toggle').removeClass('btn-pushed').addClass('btn-up').show();
-        $('#main-menu').hide();
+        $('#main-menu').css('opacity',0).hide();
         
     } else {
         //change to regular menu
         $('#menu-toggle').removeClass('btn-pushed').addClass('btn-up').hide();
-        $('#main-menu').show().css('opacity',1);
+        $('#main-menu').css('opacity',1).show();
     }
 }
 //menu toggle
 $(function(){
-    $('#menu-toggle').on('click', function(){
+    $('#menu-toggle').live('click', function(){
         if ($('#menu-toggle').hasClass('btn-pushed')){
             $('#menu-toggle').removeClass('btn-pushed').addClass('btn-up');
             $('#main-menu').animate({
                 opacity: 0
             },200).hide();
-            
             return;
         }
         $('#menu-toggle').removeClass('btn-up').addClass('btn-pushed');
