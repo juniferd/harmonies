@@ -214,7 +214,7 @@ Menu.prototype = {
                     type: 'div',
                     id: 'user_list',
                     class: '',
-                    parent: $firstDiv,
+                    parent: '#main-menu',
                     text: '',
                     inmenu: true
                 }
