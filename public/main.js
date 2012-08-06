@@ -55,6 +55,23 @@ var SCREEN_WIDTH = window.innerWidth * 2,
 
 init();
 
+function addClickListener(el, handler) {
+  var lastHandled = 0;
+  var throttledHandler = function() {
+    var now = Date.now();
+    if (now - lastHandled > 50) {
+      handler.apply(this, arguments);
+      lastHandled = now;
+    }
+  };
+
+  if ('ontouchstart' in document.documentElement) {
+    el.addEventListener('touchstart', throttledHandler, false);
+  } else {
+    el.addEventListener('click', throttledHandler, false);
+  }
+}
+
 function init() {
     var hash, palette, embed, localStorageImage;
 
@@ -108,20 +125,21 @@ function init() {
     backgroundColorSelector.addEventListener('change', onBackgroundColorSelectorChange, false);
     container.appendChild(backgroundColorSelector.container);
 
-    menu = new Menu();   
-    menu.foregroundColor.addEventListener('click', onMenuForegroundColor, false);
-    menu.backgroundColor.addEventListener('click', onMenuBackgroundColor, false);
+    menu = new Menu();
     menu.selector.addEventListener('change', onMenuSelectorChange, false);
-    menu.save.addEventListener('click', onMenuSave, false);
-    menu.clear.addEventListener('click', onMenuClear, false);
-    menu.pan.addEventListener('click', onMenuPan, false);
-    menu.erase.addEventListener('click', onMenuErase, false);
-    menu.zoomin.addEventListener('click', onMenuZoomIn, false);
-    menu.zoomout.addEventListener('click', onMenuZoomOut, false);
-    menu.about.addEventListener('click', onMenuAbout, false);
-    menu.join.addEventListener('click', onMenuJoin, false);
-    menu.rooms.addEventListener('click', onMenuRooms, false);
-    menu.layerbg.addEventListener('click', onMenuBG, false);
+
+    addClickListener(menu.foregroundColor, onMenuForegroundColor)
+    addClickListener(menu.backgroundColor, onMenuBackgroundColor)
+    addClickListener(menu.save, onMenuSave)
+    addClickListener(menu.clear, onMenuClear)
+    addClickListener(menu.pan, onMenuPan)
+    addClickListener(menu.erase, onMenuErase)
+    addClickListener(menu.zoomin, onMenuZoomIn)
+    addClickListener(menu.zoomout, onMenuZoomOut)
+    addClickListener(menu.about, onMenuAbout)
+    addClickListener(menu.join, onMenuJoin)
+    addClickListener(menu.rooms, onMenuRooms)
+    addClickListener(menu.layerbg, onMenuBG)
     menu.container.addEventListener('mouseover', onMenuMouseOver, false);
     menu.container.addEventListener('mouseout', onMenuMouseOut, false);
     container.appendChild(menu.container);

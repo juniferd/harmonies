@@ -9,33 +9,30 @@ function CheckIfMobile(){
             var $firstDiv = $('body').children('div').eq(0);
             $('<div id="menu-toggle" class="btn-up"></div>').appendTo($firstDiv);
             $('#main-menu').prependTo($firstDiv).hide();
+            var toggled = false;
+
+            addClickListener($('#menu-toggle')[0], function() {
+              if (toggled){
+                  $('#menu-toggle').removeClass('btn-pushed').addClass('btn-up');
+                  $('#main-menu').hide();
+              } else {
+                $('#menu-toggle').removeClass('btn-up').addClass('btn-pushed');
+                $('#main-menu').show();
+              }
+              toggled = !toggled;
+            });
+            
             return;
         }
         $('#menu-toggle').removeClass('btn-pushed').addClass('btn-up').show();
-        $('#main-menu').animate({'opacity':0},200).hide();
-        
+        $('#main-menu').hide();
+
     } else {
         //change to regular menu
         $('#menu-toggle').removeClass('btn-pushed').addClass('btn-up').hide();
-        $('#main-menu').animate({'opacity':1},200).show();
+        $('#main-menu').show();
     }
 }
-//menu toggle
-$(function(){
-    $('#menu-toggle').live('click tap', function(){
-        if ($('#menu-toggle').hasClass('btn-pushed')){
-            $('#menu-toggle').removeClass('btn-pushed').addClass('btn-up');
-            $('#main-menu').animate({
-                opacity: 0
-            },200).hide();
-            return;
-        }
-        $('#menu-toggle').removeClass('btn-up').addClass('btn-pushed');
-        $('#main-menu').show().animate({
-            opacity: .9
-        },200);
-    });
-});
 
 function Menu() {
     this.init();
